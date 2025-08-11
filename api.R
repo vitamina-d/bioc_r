@@ -134,6 +134,42 @@ function(gene_symbol="DHCR7", complete = TRUE) {
   )
 }
 
+#* Detail muestra info de un gen, dado su symbol
+#* @param symbol Nombre del gen
+#* @get /detail
+#* @tag endpoints
+#* @serializer unboxedJSON 
+function(symbol = "DHCR7") {
+  txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+
+  entrez <- AnnotationDbi::select(org.Hs.eg.db, keys = symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
+  details <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENSEMBL", "ENSEMBLPROT", "UNIPROT", "ENTREZID", "GENETYPE", "MAP", "SYMBOL"), keytype = "ENTREZID")
+
+  # Obtener rangos, sin filtrar genes que están en ambas cadenas .. granges / listgranges
+  range_list <- genes(txdb, single.strand.genes.only = FALSE)[entrez]
+  range <- genes(txdb)[entrez]
+  print(range)
+  range_df <- as.data.frame(range)
+
+  print(entrez)
+  print(range_list)
+  
+  list(
+    entrezID = entrez,
+    symbol = symbol,
+    type = unique(details$GENETYPE),
+    location_chr = unique(details$MAP),
+    chr = as.character(range_df$seqnames),
+    start = range_df$start,
+    end = range_df$end,
+    length = range_df$width,
+    strand = as.character(range_df$strand),
+    ensembl_id_gene = unique(details$ENSEMBL),
+    ensembl_id_protein = unique(details$ENSEMBLPROT),
+    uniprot_id = unique(details$UNIPROT)
+  )
+}
+
 #ver secuencias completas
 #cat(as.character(gene_seq), "\n")
 #cat(as.character(concat_exon), "\n")
