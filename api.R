@@ -20,15 +20,14 @@ function(msg = "") {
   )
 }
 
-#* Range devuelve la secuencia dado el cromosoma y el rango
+#* seqByRange devuelve la secuencia dado el cromosoma y el rango
 #* @param chrom Cromosoma (ej: "dhcr7")
 #* @param start Inicio
 #* @param end Fin
-#* @get /range
+#* @get /seqByRange
 #* @tag endpoints
 #* @serializer unboxedJSON 
-function(chrom = "chr11", start = 100000, end = 100100) {
-  # inicio contador
+function(chrom = "chr11", start = 71428193, end = 71452868) {
   start_time <- Sys.time()
 
   start <- as.integer(start)
@@ -41,13 +40,13 @@ function(chrom = "chr11", start = 100000, end = 100100) {
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
-  list(
+  result <- list(
+    status = "success", 
     time_secs = time,
-    chrom = chrom,
-    start = start,
-    end = end,
-    sequence_length = sequence_length,
-    sequence = sequence
+    data = list(
+      sequence_length = sequence_length,
+      sequence = sequence
+    )
   )
 }
 
@@ -59,7 +58,6 @@ function(chrom = "chr11", start = 100000, end = 100100) {
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(pattern = "", subject = "", global = TRUE) {
-  # inicio contador
   start_time <- Sys.time()
 
   seqA <- DNAString(pattern)
@@ -73,26 +71,30 @@ function(pattern = "", subject = "", global = TRUE) {
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
-  list(
+  result <- list(
+    status = "success", 
     time_secs = time,
-    score = score(align),
-    type = type,
-    pattern = pattern,
-    subject = subject,
-    pattern_align = as.character(pattern(align)),
-    subject_align = as.character(subject(align))
+    data = list(
+      score = score(align),
+      type = type,
+      pattern = pattern,
+      subject = subject,
+      pattern_align = as.character(pattern(align)),
+      subject_align = as.character(subject(align))
+    )
   )
 }
 
-#* Sequence devuelve la secuencia completa o de exones, dado el symbol de un gen
+
+
+#* SeqBySymbol devuelve la secuencia completa o de exones, dado el symbol de un gen
 #* @param gene_symbol Nombre del gen
-#* @param complete:boolean Secuencia completa (TRUE) o solo exones/cds (FALSE)
-#* @get /sequence
+#* @param complete:boolean Secuencia completa (TRUE) o solo exones (FALSE)
+#* @get /seqBySymbol
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(gene_symbol="DHCR7", complete = TRUE) {
-  
-  # inicio contador
+
   start_time <- Sys.time()
 
   #genoma y coord
@@ -121,16 +123,19 @@ function(gene_symbol="DHCR7", complete = TRUE) {
       sequence <- do.call(xscat, as.list(seq_exones))
   }
 
-  type <- ifelse(complete, "complete", "cds")
+  type <- ifelse(complete, "complete", "exons")
 
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
- 
-  list(
+
+  result <- list(
+    status = "success", 
     time_secs = time,
-    type = type,
-    sequence_length = nchar(sequence),
-    sequence = as.character(sequence)
+    data = list(
+      type = type,
+      sequence_length = nchar(sequence),
+      sequence = as.character(sequence)
+    )
   )
 }
 
@@ -140,35 +145,152 @@ function(gene_symbol="DHCR7", complete = TRUE) {
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(symbol = "DHCR7") {
+
+  start_time <- Sys.time()
+
   txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 
   entrez <- AnnotationDbi::select(org.Hs.eg.db, keys = symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
   details <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENSEMBL", "ENSEMBLPROT", "UNIPROT", "ENTREZID", "GENETYPE", "MAP", "SYMBOL"), keytype = "ENTREZID")
 
   # Obtener rangos, sin filtrar genes que están en ambas cadenas .. granges / listgranges
-  range_list <- genes(txdb, single.strand.genes.only = FALSE)[entrez]
+  #range_list <- genes(txdb, single.strand.genes.only = FALSE)[entrez]
   range <- genes(txdb)[entrez]
-  print(range)
   range_df <- as.data.frame(range)
 
-  print(entrez)
-  print(range_list)
-  
-  list(
-    entrezID = entrez,
-    symbol = symbol,
-    type = unique(details$GENETYPE),
-    location_chr = unique(details$MAP),
-    chr = as.character(range_df$seqnames),
-    start = range_df$start,
-    end = range_df$end,
-    length = range_df$width,
-    strand = as.character(range_df$strand),
-    ensembl_id_gene = unique(details$ENSEMBL),
-    ensembl_id_protein = unique(details$ENSEMBLPROT),
-    uniprot_id = unique(details$UNIPROT)
+  end_time <- Sys.time()
+  time <- as.numeric(difftime(end_time, start_time, units = "secs"))
+
+
+  result <- list(
+    status = "success", 
+    time_secs = time,
+    data = list(
+      entrezID = entrez,
+      symbol = symbol,
+      type = unique(details$GENETYPE),
+      location_chr = unique(details$MAP),
+      chr = as.character(range_df$seqnames),
+      start = range_df$start,
+      end = range_df$end,
+      length = range_df$width,
+      strand = as.character(range_df$strand),
+      ensembl_id_gene = unique(details$ENSEMBL),
+      ensembl_id_protein = unique(details$ENSEMBLPROT),
+      uniprot_id = unique(details$UNIPROT)
+    )
   )
 }
+
+#* RangeBySymbol X muestra el rango de un gen, dado su symbol
+#* @param symbol Nombre del gen
+#* @get /rangeBySymbol
+#* @tag endpoints
+#* @serializer unboxedJSON 
+function(symbol = "DHCR7") {
+
+  start_time <- Sys.time()
+
+  txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+
+  entrez <- AnnotationDbi::select(org.Hs.eg.db, keys = symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
+  details <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("MAP"), keytype = "ENTREZID")
+
+  # Obtener rangos, sin filtrar genes que están en ambas cadenas .. granges / listgranges
+  #range_list <- genes(txdb, single.strand.genes.only = FALSE)[entrez]
+  range <- genes(txdb)[entrez]
+  range_df <- as.data.frame(range)
+
+  end_time <- Sys.time()
+  time <- as.numeric(difftime(end_time, start_time, units = "secs"))
+
+
+  result <- list(
+    status = "success", 
+    time_secs = time,
+    data = list(
+      entrezID = entrez,
+      location_chr = unique(details$MAP),
+      chr = as.character(range_df$seqnames),
+      start = range_df$start,
+      end = range_df$end,
+      length = range_df$width,
+      strand = as.character(range_df$strand),
+    )
+  )
+}
+
+
+#* Percent muestra el porcentaje de bases, A/T y C/G de una secuencia
+#* @param seq Secuencia
+#* @get /percent
+#* @tag endpoints
+#* @serializer unboxedJSON 
+function(seq = "ACGT") {
+
+  start_time <- Sys.time()
+
+  # biostrings
+
+  DNA_str <- DNAString(seq)
+  
+  counter_base <- alphabetFrequency(DNA_str, baseOnly = TRUE)
+
+  AT <- counter_base["A"] + counter_base["T"]
+  CG <- counter_base["C"] + counter_base["G"] #termicamente mas estables
+
+  ATCG <- AT + CG
+  
+  AT_percent <- (AT / ATCG) * 100
+  CG_percent <- (CG / ATCG) * 100
+
+
+  ####
+  pattern_CpG <- "CG"
+  counter_CpG <- countPattern(pattern_CpG, DNA_str)
+  match_CpG <- matchPattern(pattern_CpG, DNA_str)
+
+  CpG_ranges <- as.data.frame(match_CpG@ranges)
+
+  ######## Convertir cada fila a lista: [{start:.., end:.., width:..}, ...]
+  CpG_ranges_list <- apply(CpG_ranges, 1, function(row) {
+    list(
+      start = as.integer(row["start"]),
+      end = as.integer(row["end"]),
+      width = as.integer(row["width"])
+    )
+  })
+   
+  end_time <- Sys.time()
+  time <- as.numeric(difftime(end_time, start_time, units = "secs"))
+
+  result <- list(
+    status = "success", 
+    time_secs = time,
+    data = list(
+      nucleotides = list(
+        labels = c("A", "T", "C", "G"),
+        counts = c(
+          as.integer(counter_base["A"]),
+          as.integer(counter_base["T"]),
+          as.integer(counter_base["C"]),
+          as.integer(counter_base["G"])
+        )
+      ),
+      #A = counter_base["A"],
+      #T = counter_base["T"],
+      #C = counter_base["C"],
+      #G = counter_base["G"],
+      #ATCG = ATCG,
+      #AT_percent = AT_percent,
+      #CG_percent = CG_percent,
+      counter_CpG = counter_CpG,
+      CpG_ranges = CpG_ranges
+    )
+  )
+}
+
+
 
 #ver secuencias completas
 #cat(as.character(gene_seq), "\n")
