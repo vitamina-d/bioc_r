@@ -1,18 +1,20 @@
 library(plumber)
 library(BSgenome.Hsapiens.UCSC.hg38)
-library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+library(Biostrings)
+
 library(AnnotationDbi)
 library(org.Hs.eg.db)  
-library(GenomicFeatures)   # genes(), exonsBy()
-library(Biostrings)        # getSeq(), xscat()
+library(GenomicFeatures)
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* @get /sequence
+#* SeqBySymbol devuelve la secuencia completa o de exones, dado el symbol de un gen
 #* @param gene_symbol Nombre del gen
-#* @param complete:boolean Solo exones (CDS):FALSE
+#* @param complete:boolean Secuencia completa (TRUE) o solo exones (FALSE)
+#* @get /seqBySymbol
+#* @tag endpoints
 #* @serializer unboxedJSON 
 function(gene_symbol="DHCR7", complete = TRUE) {
-  
-  # inicio contador
+
   start_time <- Sys.time()
 
   #genoma y coord
@@ -41,15 +43,18 @@ function(gene_symbol="DHCR7", complete = TRUE) {
       sequence <- do.call(xscat, as.list(seq_exones))
   }
 
-  type <- ifelse(complete, "complete", "cds")
+  type <- ifelse(complete, "complete", "exons")
 
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
- 
-  list(
+
+  result <- list(
+    status = "success", 
     time_secs = time,
-    type = type,
-    sequence_length = nchar(sequence),
-    sequence = as.character(sequence)
+    data = list(
+      type = type,
+      sequence_length = nchar(sequence),
+      sequence = as.character(sequence)
+    )
   )
 }

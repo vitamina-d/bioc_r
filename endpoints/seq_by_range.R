@@ -1,15 +1,20 @@
 library(plumber)
 library(BSgenome.Hsapiens.UCSC.hg38)
+library(Biostrings)
 
-#* Devuelve la secuencia de BSGenome, dado un cromosoma y los valores inicio y fin.
+library(AnnotationDbi)
+library(org.Hs.eg.db)  
+library(GenomicFeatures)
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* @get /range
+#* seqByRange devuelve la secuencia dado el cromosoma y el rango
 #* @param chrom Cromosoma (ej: "dhcr7")
 #* @param start Inicio
 #* @param end Fin
+#* @get /seqByRange
+#* @tag endpoints
 #* @serializer unboxedJSON 
-function(chrom = "chr11", start = 100000, end = 100100) {
-  # inicio contador
+function(chrom = "chr11", start = 71428193, end = 71452868) {
   start_time <- Sys.time()
 
   start <- as.integer(start)
@@ -22,12 +27,12 @@ function(chrom = "chr11", start = 100000, end = 100100) {
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
-  list(
+  result <- list(
+    status = "success", 
     time_secs = time,
-    chrom = chrom,
-    start = start,
-    end = end,
-    sequence_length = sequence_length,
-    sequence = sequence
+    data = list(
+      sequence_length = sequence_length,
+      sequence = sequence
+    )
   )
 }

@@ -1,13 +1,20 @@
 library(plumber)
+library(BSgenome.Hsapiens.UCSC.hg38)
 library(Biostrings)
 
-#* @get /paiswise
+library(AnnotationDbi)
+library(org.Hs.eg.db)  
+library(GenomicFeatures)
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+
+#* Pairwise devuelve el alineamiento global o local de dos secuecias
 #* @param pattern Lectura
 #* @param subject Genoma de referencia
-#* @param global:boolean Alineamiento global (Needleman-Wunsch) o local (Smith-Waterman)
+#* @param global:boolean Alineamiento global (TRUE) o local (FALSE)
+#* @get /paiswise
+#* @tag endpoints
 #* @serializer unboxedJSON 
 function(pattern = "", subject = "", global = TRUE) {
-  # inicio contador
   start_time <- Sys.time()
 
   seqA <- DNAString(pattern)
@@ -21,13 +28,16 @@ function(pattern = "", subject = "", global = TRUE) {
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
-  list(
+  result <- list(
+    status = "success", 
     time_secs = time,
-    score = score(align), # ver matriz
-    type = type,
-    pattern = pattern,
-    subject = subject,
-    pattern_align = as.character(pattern(align)),
-    subject_align = as.character(subject(align))
+    data = list(
+      score = score(align),
+      type = type,
+      pattern = pattern,
+      subject = subject,
+      pattern_align = as.character(pattern(align)),
+      subject_align = as.character(subject(align))
+    )
   )
 }

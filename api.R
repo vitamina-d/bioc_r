@@ -290,30 +290,25 @@ function(seq = "ACGT") {
   )
 }
 
+#* Translate traduce la secuencia a proteina
+#* @param seq Secuencia
+#* @get /translate
+#* @tag endpoints
+#* @serializer unboxedJSON 
+function(seq = "ACGT") {
 
+  start_time <- Sys.time()
 
-#ver secuencias completas
-#cat(as.character(gene_seq), "\n")
-#cat(as.character(concat_exon), "\n")
+  # biostrings
+  DNA_str <- DNAString(seq)
+  protein <- translate(dna)
 
- 
-  #obtener symbol
-  #mapIds(org.Hs.eg.db, keys = gene_entrez, column = "SYMBOL", keytype = "ENTREZID")
-  #obtener chr
+  end_time <- Sys.time()
+  time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
-
-
-  #entrezDHCR7 <- AnnotationDbi::select(org.Hs.eg.db, keys = "DHCR7", columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
-  #entrezTP53 <- AnnotationDbi::select(org.Hs.eg.db, keys = "TP53", columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
-
-  #coord_DHCR7 <- exonsBy(txdb, by = "gene")[["1717"]] 
-  #coord_TP53 <- exonsBy(txdb, by = "gene")[["7157"]] 
-  
-  #seq_DHCR7  <- getSeq(human_genome, coord_DHCR7)
-  #seq_TP53  <- getSeq(human_genome, coord_TP53)
-
-  #CDS: secuencia de la region codificante
-  #sequence_DHCR7 <- do.call(xscat, as.list(seq_DHCR7))
-  #sequence_TP53 <- do.call(xscat, as.list(seq_TP53))
-
-  #mapIds(org.Hs.eg.db, keys = gene_symbol, column = "CHR", keytype = "SYMBOL")
+  result <- list(
+    status = "success", 
+    time_secs = time,
+    data = protein
+  )  
+}
