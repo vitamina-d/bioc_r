@@ -1,15 +1,11 @@
-library(plumber)
-library(BSgenome.Hsapiens.UCSC.hg38)
-library(Biostrings)
-
 library(AnnotationDbi)
 library(org.Hs.eg.db)  
 library(GenomicFeatures)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* Detail muestra info de un gen, dado su symbol
+#* detail muestra info de un gen, dado su symbol
 #* @param symbol Nombre del gen
-#* @get /detail
+#* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(symbol = "DHCR7") {

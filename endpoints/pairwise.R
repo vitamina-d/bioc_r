@@ -1,17 +1,10 @@
-library(plumber)
-library(BSgenome.Hsapiens.UCSC.hg38)
 library(Biostrings)
 
-library(AnnotationDbi)
-library(org.Hs.eg.db)  
-library(GenomicFeatures)
-library(TxDb.Hsapiens.UCSC.hg38.knownGene)
-
-#* Pairwise devuelve el alineamiento global o local de dos secuecias
+#* pairwise devuelve el alineamiento global o local de dos secuecias
 #* @param pattern Lectura
 #* @param subject Genoma de referencia
 #* @param global:boolean Alineamiento global (TRUE) o local (FALSE)
-#* @get /paiswise
+#* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(pattern = "", subject = "", global = TRUE) {

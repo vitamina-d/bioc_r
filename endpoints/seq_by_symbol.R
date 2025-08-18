@@ -1,4 +1,3 @@
-library(plumber)
 library(BSgenome.Hsapiens.UCSC.hg38)
 library(Biostrings)
 
@@ -7,10 +6,10 @@ library(org.Hs.eg.db)
 library(GenomicFeatures)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* SeqBySymbol devuelve la secuencia completa o de exones, dado el symbol de un gen
+#* seq_by_symbol devuelve la secuencia completa o de exones, dado el symbol de un gen
 #* @param gene_symbol Nombre del gen
 #* @param complete:boolean Secuencia completa (TRUE) o solo exones (FALSE)
-#* @get /seqBySymbol
+#* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(gene_symbol="DHCR7", complete = TRUE) {

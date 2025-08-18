@@ -301,7 +301,7 @@ function(seq = "ACGT") {
 
   # biostrings
   DNA_str <- DNAString(seq)
-  protein <- translate(dna)
+  protein <- translate(DNA_str)
 
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
@@ -309,6 +309,8 @@ function(seq = "ACGT") {
   result <- list(
     status = "success", 
     time_secs = time,
-    data = protein
+    data = as.character(protein) # AAString a texto
   )  
+
+  return(result)
 }

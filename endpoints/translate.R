@@ -1,15 +1,8 @@
-library(plumber)
-library(BSgenome.Hsapiens.UCSC.hg38)
 library(Biostrings)
 
-library(AnnotationDbi)
-library(org.Hs.eg.db)  
-library(GenomicFeatures)
-library(TxDb.Hsapiens.UCSC.hg38.knownGene)
-
-#* Translate traduce la secuencia a proteina
+#* translate traduce la secuencia a proteina
 #* @param seq Secuencia
-#* @get /translate
+#* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(seq = "ACGT") {
@@ -18,7 +11,7 @@ function(seq = "ACGT") {
 
   # biostrings
   DNA_str <- DNAString(seq)
-  protein <- translate(dna)
+  protein <- translate(DNA_str)
 
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
@@ -26,6 +19,8 @@ function(seq = "ACGT") {
   result <- list(
     status = "success", 
     time_secs = time,
-    data = protein
+    data = as.character(protein) # AAString a texto
   )  
+
+  return(result)
 }

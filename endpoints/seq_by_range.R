@@ -1,17 +1,11 @@
-library(plumber)
 library(BSgenome.Hsapiens.UCSC.hg38)
 library(Biostrings)
 
-library(AnnotationDbi)
-library(org.Hs.eg.db)  
-library(GenomicFeatures)
-library(TxDb.Hsapiens.UCSC.hg38.knownGene)
-
-#* seqByRange devuelve la secuencia dado el cromosoma y el rango
+#* seq_by_range devuelve la secuencia dado el cromosoma y el rango
 #* @param chrom Cromosoma (ej: "dhcr7")
 #* @param start Inicio
 #* @param end Fin
-#* @get /seqByRange
+#* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(chrom = "chr11", start = 71428193, end = 71452868) {

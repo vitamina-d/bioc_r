@@ -1,8 +1,6 @@
-library(plumber)
-
-#* Echo back the input
+#* echo back the input
 #* @param msg The message to echo
-#* @get /echo
+#* @get /
 function(msg = "") {
   list(
     msg = paste0("The message is: '", msg, "'")

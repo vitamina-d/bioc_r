@@ -1,15 +1,8 @@
-library(plumber)
-library(BSgenome.Hsapiens.UCSC.hg38)
 library(Biostrings)
 
-library(AnnotationDbi)
-library(org.Hs.eg.db)  
-library(GenomicFeatures)
-library(TxDb.Hsapiens.UCSC.hg38.knownGene)
-
-#* Percent muestra el porcentaje de bases, A/T y C/G de una secuencia
+#* percent muestra el porcentaje de bases, A/T y C/G de una secuencia
 #* @param seq Secuencia
-#* @get /percent
+#* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(seq = "ACGT") {
