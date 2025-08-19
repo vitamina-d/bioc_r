@@ -26,7 +26,8 @@ function(chrom = "chr11", start = 71428193, end = 71452868) {
     time_secs = time,
     data = list(
       sequence_length = sequence_length,
-      sequence = sequence
+      sequence = sequence,
+      complete = TRUE
     )
   )
 }

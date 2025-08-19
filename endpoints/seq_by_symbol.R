@@ -51,7 +51,7 @@ function(gene_symbol="DHCR7", complete = TRUE) {
     status = "success", 
     time_secs = time,
     data = list(
-      type = type,
+      complete = complete,
       sequence_length = nchar(sequence),
       sequence = as.character(sequence)
     )

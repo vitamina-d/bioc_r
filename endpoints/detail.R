@@ -33,15 +33,17 @@ function(symbol = "DHCR7") {
       entrezID = entrez,
       symbol = symbol,
       type = unique(details$GENETYPE),
-      location_chr = unique(details$MAP),
-      chr = as.character(range_df$seqnames),
-      start = range_df$start,
-      end = range_df$end,
+      location = list(
+        citogenetic = unique(details$MAP),
+        chr = as.character(range_df$seqnames),
+        start = range_df$start,
+        end = range_df$end,
+      ),
       length = range_df$width,
       strand = as.character(range_df$strand),
       ensembl_id_gene = unique(details$ENSEMBL),
       ensembl_id_protein = unique(details$ENSEMBLPROT),
-      uniprot_id = unique(details$UNIPROT)
+      uniprot_ids = unique(details$UNIPROT)
     )
   )
 }
