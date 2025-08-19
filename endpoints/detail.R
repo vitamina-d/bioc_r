@@ -37,7 +37,7 @@ function(symbol = "DHCR7") {
         citogenetic = unique(details$MAP),
         chr = as.character(range_df$seqnames),
         start = range_df$start,
-        end = range_df$end,
+        end = range_df$end
       ),
       length = range_df$width,
       strand = as.character(range_df$strand),
