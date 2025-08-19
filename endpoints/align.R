@@ -1,6 +1,6 @@
 library(Biostrings)
 
-#* pairwise devuelve el alineamiento global o local de dos secuecias
+#* align devuelve el alineamiento global o local de dos secuecias
 #* @param pattern Lectura
 #* @param subject Genoma de referencia
 #* @param global:boolean Alineamiento global (TRUE) o local (FALSE)

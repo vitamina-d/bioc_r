@@ -56,13 +56,13 @@ function(seq = "ACGT") {
           as.integer(counter_base["G"])
         )
       ),
-      #A = counter_base["A"],
-      #T = counter_base["T"],
-      #C = counter_base["C"],
-      #G = counter_base["G"],
-      #ATCG = ATCG,
-      #AT_percent = AT_percent,
-      #CG_percent = CG_percent,
+      A = counter_base["A"],
+      T = counter_base["T"],
+      C = counter_base["C"],
+      G = counter_base["G"],
+      ATCG = ATCG,
+      AT_percent = AT_percent,
+      CG_percent = CG_percent,
       counter_CpG = counter_CpG,
       CpG_ranges = CpG_ranges
     )
