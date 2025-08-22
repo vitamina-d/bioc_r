@@ -15,7 +15,7 @@ function(symbol = "DHCR7") {
   txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 
   entrez <- AnnotationDbi::select(org.Hs.eg.db, keys = symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
-  details <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENSEMBL", "ENSEMBLPROT", "UNIPROT", "ENTREZID", "GENETYPE", "MAP", "SYMBOL"), keytype = "ENTREZID")
+  details <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENSEMBL", "ENSEMBLPROT", "UNIPROT", "ENTREZID", "GENETYPE", "MAP", "SYMBOL", "GO", "ONTOLOGY"), keytype = "ENTREZID")
 
   # Obtener rangos, sin filtrar genes que están en ambas cadenas .. granges / listgranges
   #range_list <- genes(txdb, single.strand.genes.only = FALSE)[entrez]
@@ -43,7 +43,9 @@ function(symbol = "DHCR7") {
       strand = as.character(range_df$strand),
       ensembl_id_gene = unique(details$ENSEMBL),
       ensembl_id_protein = unique(details$ENSEMBLPROT),
-      uniprot_ids = unique(details$UNIPROT)
+      uniprot_ids = unique(details$UNIPROT),
+      go = unique(details$go),
+      ontology = unique(details$ontology)
     )
   )
-}
+}#GO

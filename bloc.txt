@@ -7,3 +7,9 @@ function(req,res)
 
 https://www.rplumber.io/articles/programmatic-usage.html
 mount
+
+
+* org.Hs.egALIAS is an R object that provides mappings between common gene symbol identifiers
+and entrez gene identifiers.
+Feb/2025
+https://bioconductor.org/packages/release/data/annotation/manuals/org.Hs.eg.db/man/org.Hs.eg.db.pdf

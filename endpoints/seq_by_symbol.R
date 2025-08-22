@@ -32,7 +32,7 @@ function(gene_symbol="DHCR7", complete = TRUE) {
   if(complete){
     
     coord_gene <- genes(txdb)[gene_entrez]
-    sequence <- getSeq(human_genome, coord_gene)
+    sequence <- getSeq(human_genome, coord_gene) #devuelve la codificante 5'→3
 
   } else {
       coord_exones <- exonsBy(txdb, by = "gene")[[gene_entrez]] 
