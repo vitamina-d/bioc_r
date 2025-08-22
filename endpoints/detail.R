@@ -3,18 +3,18 @@ library(org.Hs.eg.db)
 library(GenomicFeatures)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* detail muestra info de un gen, dado su symbol
-#* @param symbol Nombre del gen
+#* detail muestra info de un gen, dado su ENTREZ #symbol
+#* @param entrez id del gen
 #* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
-function(symbol = "DHCR7") {
+function(entrez = "1717") {
 
   start_time <- Sys.time()
 
   txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 
-  entrez <- AnnotationDbi::select(org.Hs.eg.db, keys = symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
+  #entrez <- AnnotationDbi::select(org.Hs.eg.db, keys = symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
   details <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENSEMBL", "ENSEMBLPROT", "UNIPROT", "ENTREZID", "GENETYPE", "MAP", "SYMBOL", "GO", "ONTOLOGY"), keytype = "ENTREZID")
 
   # Obtener rangos, sin filtrar genes que están en ambas cadenas .. granges / listgranges
@@ -31,7 +31,7 @@ function(symbol = "DHCR7") {
     time_secs = time,
     data = list(
       entrezID = entrez,
-      symbol = symbol,
+      symbol = unique(details$SYMBOL),
       type = unique(details$GENETYPE),
       location = list(
         citogenetic = unique(details$MAP),
@@ -44,8 +44,8 @@ function(symbol = "DHCR7") {
       ensembl_id_gene = unique(details$ENSEMBL),
       ensembl_id_protein = unique(details$ENSEMBLPROT),
       uniprot_ids = unique(details$UNIPROT),
-      go = unique(details$go),
-      ontology = unique(details$ontology)
+      #go = unique(details$go),
+      #ontology = unique(details$ontology)
     )
   )
 }#GO
