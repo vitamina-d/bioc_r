@@ -10,6 +10,14 @@ mount
 
 
 * org.Hs.egALIAS is an R object that provides mappings between common gene symbol identifiers
-and entrez gene identifiers.
-Feb/2025
-https://bioconductor.org/packages/release/data/annotation/manuals/org.Hs.eg.db/man/org.Hs.eg.db.pdf
+and entrez gene identifiers. Feb/2025
+OK https://bioconductor.org/packages/release/data/annotation/manuals/org.Hs.eg.db/man/org.Hs.eg.db.pdf
+
+
+BD
+| datetime | endpoint | input | time_secs |  status  |
+| now      | detail   | name  | 2.5       |  success |
+
+* promedio por endpoint
+* consultas frecuentes
+* success/fail

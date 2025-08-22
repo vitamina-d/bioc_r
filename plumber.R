@@ -5,6 +5,7 @@ library(plumber)
 
 api <- Plumber$new()
 api$mount("/isentrez", Plumber$new("endpoints/isentrez.R"))
+api$mount("/get_entrez", Plumber$new("endpoints/get_entrez.R"))
 api$mount("/detail", Plumber$new("endpoints/detail.R"))
 api$mount("/seq_by_symbol", Plumber$new("endpoints/seq_by_symbol.R"))
 api$mount("/percent", Plumber$new("endpoints/percent.R"))

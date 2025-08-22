@@ -1,7 +1,7 @@
 library(AnnotationDbi)
 library(org.Hs.eg.db)  
 
-#* entrez valida que el valor sea un ENTREZ
+#* isentrez valida que el valor sea un ENTREZ
 #* @param num entrez
 #* @get /
 #* @tag endpoints
@@ -12,9 +12,9 @@ function(entrez = "1717") {
   
   is_entrez = FALSE
 
-  if (entrez %in% keys(org.Hs.eg.db, keytype = "ENTREZID")) {
-    is_entrez = TRUE
-  }
+  #if (entrez %in% keys(org.Hs.eg.db, keytype = "ENTREZID")) {
+   # is_entrez = TRUE
+  #}
 
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
