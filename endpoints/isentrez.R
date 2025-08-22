@@ -2,7 +2,7 @@ library(AnnotationDbi)
 library(org.Hs.eg.db)  
 
 #* isentrez valida que el valor sea un ENTREZ
-#* @param num entrez
+#* @param entrez
 #* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
@@ -12,9 +12,10 @@ function(entrez = "1717") {
   
   is_entrez = FALSE
 
-  #if (entrez %in% keys(org.Hs.eg.db, keytype = "ENTREZID")) {
-   # is_entrez = TRUE
-  #}
+  ids <- keys(org.Hs.eg.db, keytype = "ENTREZID")
+  if (entrez %in% ids) {
+    is_entrez = TRUE
+  }
 
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
@@ -24,7 +25,7 @@ function(entrez = "1717") {
     status = "success", 
     time_secs = time,
     data = list(
-      is_entrez = is_entrez,
+      is_entrez = is_entrez
     )
   )
 }
