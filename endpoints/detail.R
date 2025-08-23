@@ -3,7 +3,7 @@ library(org.Hs.eg.db)
 library(GenomicFeatures)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* detail muestra info de un gen, dado su ENTREZ #symbol
+#* detail muestra info de un gen, dado su ENTREZ 
 #* @param entrez id del gen
 #* @get /
 #* @tag endpoints
@@ -35,15 +35,15 @@ function(entrez = "1717") {
       type = unique(details$GENETYPE),
       location = list(
         citogenetic = unique(details$MAP),
+        strand = as.character(range_df$strand),
         chr = as.character(range_df$seqnames),
         start = range_df$start,
-        end = range_df$end
+        end = range_df$end,
+        length = range_df$width
       ),
-      length = range_df$width,
-      strand = as.character(range_df$strand),
       ensembl_id_gene = unique(details$ENSEMBL),
       ensembl_id_protein = unique(details$ENSEMBLPROT),
-      uniprot_ids = unique(details$UNIPROT),
+      uniprot_ids = unique(details$UNIPROT)
       #go = unique(details$go),
       #ontology = unique(details$ontology)
     )

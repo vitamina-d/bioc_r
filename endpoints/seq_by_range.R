@@ -6,7 +6,6 @@ library(Biostrings)
 #* @param start Inicio
 #* @param end Fin
 #* @get /
-#* @tag endpoints
 #* @serializer unboxedJSON 
 function(chrom = "chr11", start = 71428193, end = 71452868) {
   start_time <- Sys.time()

@@ -7,12 +7,12 @@ library(GenomicFeatures)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
 #* seq_by_symbol devuelve la secuencia completa o de exones, dado el symbol de un gen
-#* @param gene_symbol Nombre del gen
+#* @param entrez Nombre del gen
 #* @param complete:boolean Secuencia completa (TRUE) o solo exones (FALSE)
 #* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
-function(gene_symbol="DHCR7", complete = TRUE) {
+function(entrez="1717", complete = TRUE) {
 
   start_time <- Sys.time()
 
@@ -23,7 +23,7 @@ function(gene_symbol="DHCR7", complete = TRUE) {
   ### identificar el gen 
   #mapIds(org.Hs.eg.db, keys = gene_entrez, column = "SYMBOL", keytype = "ENTREZID")
   #mapIds(org.Hs.eg.db, keys = gene_symbol, column = "CHR", keytype = "SYMBOL")
-  gene_entrez <- AnnotationDbi::select(org.Hs.eg.db, keys = gene_symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
+#  entrez <- AnnotationDbi::select(org.Hs.eg.db, keys = gene_symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
 
   ####VALIDAR
 
@@ -31,18 +31,18 @@ function(gene_symbol="DHCR7", complete = TRUE) {
   #secuencia: objeto DNAStringSet de biostrings
   if(complete){
     
-    coord_gene <- genes(txdb)[gene_entrez]
+    coord_gene <- genes(txdb)[entrez]
     sequence <- getSeq(human_genome, coord_gene) #devuelve la codificante 5'→3
 
   } else {
-      coord_exones <- exonsBy(txdb, by = "gene")[[gene_entrez]] 
+      coord_exones <- exonsBy(txdb, by = "gene")[[entrez]] 
       seq_exones <- getSeq(human_genome, coord_exones)
 
-      #CDS: secuencia de la region codificante
+      #exones
       sequence <- do.call(xscat, as.list(seq_exones))
   }
 
-  type <- ifelse(complete, "complete", "exons")
+#  type <- ifelse(complete, "complete", "exons")
 
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
@@ -51,7 +51,7 @@ function(gene_symbol="DHCR7", complete = TRUE) {
     status = "success", 
     time_secs = time,
     data = list(
-      complete = as.logical(complete), #sino va string
+      complete = as.logical(complete),
       sequence_length = nchar(sequence),
       sequence = as.character(sequence)
     )

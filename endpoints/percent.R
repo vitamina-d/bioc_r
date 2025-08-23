@@ -1,16 +1,15 @@
 library(Biostrings)
 
 #* percent muestra el porcentaje de bases, A/T y C/G de una secuencia
-#* @param seq Secuencia
-#* @get /
+#* @post /
+#* @parser json
+#* @param seq
 #* @tag endpoints
 #* @serializer unboxedJSON 
-function(seq = "ACGT") {
+function(seq) {
 
   start_time <- Sys.time()
-
-  # biostrings
-
+  
   DNA_str <- DNAString(seq)
   
   counter_base <- alphabetFrequency(DNA_str, baseOnly = TRUE)
@@ -22,7 +21,6 @@ function(seq = "ACGT") {
   
   at_percent <- (AT / total) * 100
   cg_percent <- (CG / total) * 100
-
 
   ####
   pattern_CpG <- "CG"
@@ -48,16 +46,13 @@ function(seq = "ACGT") {
     time_secs = time,
     data = list(
       composition = list(
+        length = total,
         nucleotides = list(
-          labels = c("A", "T", "C", "G"),
-          counts = c(
-            as.integer(counter_base["A"]),
-            as.integer(counter_base["T"]),
-            as.integer(counter_base["C"]),
-            as.integer(counter_base["G"])
-          )
+          A = as.integer(counter_base["A"]),
+          T = as.integer(counter_base["T"]),
+          C = as.integer(counter_base["C"]),
+          G = as.integer(counter_base["G"])
         ),
-        total = total,
         at_percent = at_percent,
         cg_percent = cg_percent
       ),
@@ -69,3 +64,13 @@ function(seq = "ACGT") {
   )
 }
 
+
+        #nucleotides = list(
+         # labels = c("A", "T", "C", "G"),
+          #counts = c(
+           # as.integer(counter_base["A"]),
+            #as.integer(counter_base["T"]),
+            #as.integer(counter_base["C"]),
+            #as.integer(counter_base["G"])
+          #)
+        #),

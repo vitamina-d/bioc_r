@@ -1,6 +1,7 @@
 #* entrez devuelve el entrez del value
 #* @param value es un symbol o alias
 #* @get /
+#* @tag endpoints
 #* @serializer unboxedJSON 
 function(value = "DHCR7") {
 
