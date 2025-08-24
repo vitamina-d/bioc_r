@@ -1,23 +1,10 @@
-https://rest.ensembl.org/sequence/id/ENSMUST00000128610?content-type=text/plain
 raton dhcr7
+    https://rest.ensembl.org/sequence/id/ENSMUST00000128610?content-type=text/plain
 
+function(req,res)?
+    https://www.rplumber.io/articles/routing-and-input.html
 
-https://www.rplumber.io/articles/routing-and-input.html
-function(req,res)
+* org.Hs.egALIAS is an R object that provides mappings between common gene symbol identifiers and entrez gene identifiers. Feb/2025
+    https://bioconductor.org/packages/release/data/annotation/manuals/org.Hs.eg.db/man/org.Hs.eg.db.pdf
 
-https://www.rplumber.io/articles/programmatic-usage.html
-mount
-
-
-* org.Hs.egALIAS is an R object that provides mappings between common gene symbol identifiers
-and entrez gene identifiers. Feb/2025
-OK https://bioconductor.org/packages/release/data/annotation/manuals/org.Hs.eg.db/man/org.Hs.eg.db.pdf
-
-
-BD
-| datetime | endpoint | input | time_secs |  status  |
-| now      | detail   | name  | 2.5       |  success |
-
-* promedio por endpoint
-* consultas frecuentes
-* success/fail
+https://ploomber.io/blog/restapi-plumber/

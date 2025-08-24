@@ -6,8 +6,8 @@ library(org.Hs.eg.db)
 library(GenomicFeatures)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* seq_by_symbol devuelve la secuencia completa o de exones, dado el symbol de un gen
-#* @param entrez Nombre del gen
+#* sequence devuelve la secuencia completa o de exones a partir de su entrez
+#* @param entrez EntrezID
 #* @param complete:boolean Secuencia completa (TRUE) o solo exones (FALSE)
 #* @get /
 #* @tag endpoints

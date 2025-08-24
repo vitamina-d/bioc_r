@@ -4,7 +4,7 @@ library(Biostrings)
 #* @param pattern Lectura
 #* @param subject Genoma de referencia
 #* @param global:boolean Alineamiento global (TRUE) o local (FALSE)
-#* @get /
+#* @post /
 #* @tag endpoints
 #* @serializer unboxedJSON 
 function(pattern = "", subject = "", global = TRUE) {
@@ -14,9 +14,12 @@ function(pattern = "", subject = "", global = TRUE) {
   seqB <- DNAString(subject)
 
   type <- ifelse(global, "global", "local")
+  gapOpening <- -2
+  gapExtension <- -1
 
   # Alineamiento global (tipo Needleman-Wunsch)
-  align <- pairwiseAlignment(	seqA, seqB, substitutionMatrix = NULL, gapOpening = -2, gapExtension = -1, type = type)
+  align <- pairwiseAlignment(	seqA, seqB, substitutionMatrix = NULL, gapOpening = gapOpening, gapExtension = gapExtension, type = type)
+  #substitutionMatrix = NULL: iguales
 
   end_time <- Sys.time()
   time <- as.numeric(difftime(end_time, start_time, units = "secs"))
@@ -26,9 +29,11 @@ function(pattern = "", subject = "", global = TRUE) {
     time_secs = time,
     data = list(
       score = score(align),
+      gapOpening = gapOpening,
+      gapExtension = gapExtension,
       type = type,
-      pattern = pattern,
-      subject = subject,
+      #pattern = pattern,
+      #subject = subject,
       pattern_align = as.character(pattern(align)),
       subject_align = as.character(subject(align))
     )
