@@ -8,3 +8,22 @@ function(req,res)?
     https://bioconductor.org/packages/release/data/annotation/manuals/org.Hs.eg.db/man/org.Hs.eg.db.pdf
 
 https://ploomber.io/blog/restapi-plumber/
+
+
+TABLE
+
+{
+  "code": 200,
+  "time_secs": 1.7636,
+  "start_time": "2025-08-25 13:58:50",
+  "end_time": "2025-08-25 13:58:52",
+  "data": {
+    "count": 193305,
+    "table": [
+      {
+        "ENTREZID": "1",
+        "SYMBOL": "A1BG"
+      }, ...
+      ]
+  }
+}

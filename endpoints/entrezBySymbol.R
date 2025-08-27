@@ -1,7 +1,6 @@
 #* entrezBySymbol devuelve el entrez si lo encuentra
 #* @param symbol puede ser un symbol 
 #* @get /
-#* @tag endpoints
 #* @serializer unboxedJSON 
 function(symbol) {    #################################### no acepta numeros ni minusculas
 
@@ -10,6 +9,7 @@ function(symbol) {    #################################### no acepta numeros ni 
     if (is.null(symbol) || symbol == "" ) {
         result <- list(
             code = 400,
+            datetime = start_time,
             time_secs = time,
             data = list (
                 message = "Ingrese un valor."
@@ -30,6 +30,7 @@ function(symbol) {    #################################### no acepta numeros ni 
     if (is.null(entrez)) {
         result <- list(
             code = 500,
+            datetime = start_time,
             time_secs = time,
             data = list (
                 message = "try catch"
@@ -38,6 +39,7 @@ function(symbol) {    #################################### no acepta numeros ni 
     } else if (length(entrez) == 0) {
         result <- list(
             code = 404,
+            datetime = start_time,
             time_secs = time,
             data = list (
                 message = paste("no se encontro entrez para ", symbol)
@@ -46,6 +48,7 @@ function(symbol) {    #################################### no acepta numeros ni 
     } else {
         result <- list(
             code = 200,
+            datetime = start_time,
             time_secs = time,
             data = list( 
                 entrez = unique(entrez)

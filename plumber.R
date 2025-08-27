@@ -3,7 +3,7 @@ library(plumber)
 #* @apiTitle Vitamina D
 #* @apiDescription API para cargar archivos FASTQ, alinearlos con el genoma humano (hg38), extraer fragmentos de genes relacionados con la vitamina D y analizar variantes genomicas.
 
-### AGREGAR COMPARTIDAS
+### AGReGAR COMPARTIDAS
 
 api <- Plumber$new()
 api$mount("/isentrez", Plumber$new("endpoints/isentrez.R"))
@@ -16,6 +16,7 @@ api$mount("/seq_by_range", Plumber$new("endpoints/seq_by_range.R"))
 api$mount("/echo", Plumber$new("endpoints/echo.R"))
 
 
+api$mount("/table", Plumber$new("endpoints/table.R"))
 api$mount("/entrezByAlias", Plumber$new("endpoints/entrezByAlias.R"))  ##unificar
 api$mount("/entrezBySymbol", Plumber$new("endpoints/entrezBySymbol.R")) ##unificar
 

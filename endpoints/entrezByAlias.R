@@ -1,7 +1,6 @@
 #* entrezByAlias devuelve el entrez si lo encuentra
 #* @param alias puede ser un alias
 #* @get /
-#* @tag endpoints
 #* @serializer unboxedJSON 
 function(alias) {
 
@@ -28,6 +27,7 @@ function(alias) {
     if (is.null(entrez)) {
         result <- list(
             code = 500,
+            datetime = start_time,
             time_secs = time,
             data = list (
                 message = "try catch"
@@ -36,6 +36,7 @@ function(alias) {
     } else if (length(entrez) == 0) {
         result <- list(
             code = 404,
+            datetime = start_time,
             time_secs = time,
             data = list (
                 message = paste("no se encontro entrez para ", alias)
@@ -44,6 +45,7 @@ function(alias) {
     } else {
         result <- list(
             code = 200,
+            datetime = start_time,
             time_secs = time,
             data = list( 
                 entrez = unique(entrez)
