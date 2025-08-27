@@ -1,14 +1,18 @@
-#* entrezByAlias devuelve el entrez si lo encuentra
-#* @param alias puede ser un alias
+#* entrezBySymbol devuelve el entrez si lo encuentra
+#* @param alias 
 #* @get /
 #* @serializer unboxedJSON 
-function(alias) {
+function(alias) {    #################################### no acepta numeros ni minusculas
 
     start_time <- Sys.time()
 
     if (is.null(alias) || alias == "" ) {
+        end_time <- Sys.time()
+        time <- as.numeric(difftime(end_time, start_time, units = "secs"))
+
         result <- list(
             code = 400,
+            datetime = start_time,
             time_secs = time,
             data = list (
                 message = "Ingrese un valor."
@@ -18,9 +22,11 @@ function(alias) {
     } 
 
     entrez <- tryCatch({
+
         AnnotationDbi::select(org.Hs.eg.db, keys = alias, columns = "ENTREZID", keytype = "ALIAS")$ENTREZID
+
     }, error = function(e) NULL)
-    
+
     end_time <- Sys.time()
     time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
@@ -30,7 +36,7 @@ function(alias) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = "try catch"
+                message = "Error del servidor."
             )
         )
     } else if (length(entrez) == 0) {
@@ -39,7 +45,7 @@ function(alias) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = paste("no se encontro entrez para ", alias)
+                message = paste("no se encontro entrez para ", symbol)
             )
         )
     } else {

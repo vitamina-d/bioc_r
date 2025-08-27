@@ -19,7 +19,7 @@ function(entrez) {
 
 
   if (is.null(detail)) {
-      result <- list(
+      response <- list(
           code = 500,
           datetime = start_time,
           time_secs = time,
@@ -28,7 +28,7 @@ function(entrez) {
           )
       )
   } else if (length(detail) == 0) {
-      result <- list(
+      response <- list(
           code = 404,
           datetime = start_time,
           time_secs = time,
@@ -37,7 +37,7 @@ function(entrez) {
           )
       )
   } else {
-    result <- list(
+    response <- list(
       code = 200,
       datetime = start_time,
       time_secs = time,
@@ -49,5 +49,5 @@ function(entrez) {
       )
     )
   }
-  return(result)
+  return(response)
 }

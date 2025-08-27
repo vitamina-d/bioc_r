@@ -8,60 +8,69 @@ library(Biostrings)
 #* @serializer unboxedJSON 
 function(seq) {
 
-  start_time <- Sys.time()
+    start_time <- Sys.time()
+
+    if (is.null(seq) || seq == "" ) {
+        end_time <- Sys.time()
+        time <- as.numeric(difftime(end_time, start_time, units = "secs"))
+
+        result <- list(
+            code = 400,
+            datetime = start_time,
+            time_secs = time,
+            data = list (
+                message = "Ingrese un valor."
+            )
+        )
+        return(result)
+    }  
   
-  DNA_str <- DNAString(seq)
-  
-  counter_base <- alphabetFrequency(DNA_str, baseOnly = TRUE)
+    DNA_str <- tryCatch({
+        DNAString(seq)
+        #as.character(DNA_str) seq
+    }, error = function(e) NULL)
+      
+    if (is.null(DNA_str)) {
+        end_time <- Sys.time()
+        time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
-  AT <- counter_base["A"] + counter_base["T"]
-  CG <- counter_base["C"] + counter_base["G"] #termicamente mas estables
+        result <- list(
+            code = 400,
+            datetime = start_time,
+            time_secs = time,
+            data = list (
+                message = "Ingrese una secuencia valida."
+            )
+        )
+        return(response)
 
-  total <- AT + CG
-  
-  at_percent <- (AT / total) * 100
-  cg_percent <- (CG / total) * 100
+    } else {
+        counter_base <- alphabetFrequency(DNA_str, baseOnly = TRUE)
+        pattern_CpG <- "CG"
+        counter_CpG <- countPattern(pattern_CpG, DNA_str)
+        match_CpG <- matchPattern(pattern_CpG, DNA_str)
+        cpg_info <- as.list(match_CpG@ranges@start)
 
-  ####
-  pattern_CpG <- "CG"
-  counter_CpG <- countPattern(pattern_CpG, DNA_str)
-  match_CpG <- matchPattern(pattern_CpG, DNA_str)
+        end_time <- Sys.time()
+        time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
-  cpg_info <- as.data.frame(match_CpG@ranges)
-  
-  ######## Convertir cada fila a lista: [{start:.., end:.., width:..}, ...]
-  cpg_info_list <- apply(cpg_info, 1, function(row) {
-    list(
-      start = as.integer(row["start"]),
-      end = as.integer(row["end"]),
-      width = as.integer(row["width"])
-    )
-  })
-
-  end_time <- Sys.time()
-  time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
-  result <- list(
-    status = "success", 
-    time_secs = time,
-    data = list(
-      composition = list(
-        length = total,
-        nucleotides = list(
-          A = as.integer(counter_base["A"]),
-          T = as.integer(counter_base["T"]),
-          C = as.integer(counter_base["C"]),
-          G = as.integer(counter_base["G"])
-        ),
-        at_percent = at_percent,
-        cg_percent = cg_percent
-      ),
-      cpg_islands = list(
-        length = counter_CpG,
-        ranges = cpg_info
-      )
-    )
-  )
+        result <- list(
+            code = 200,
+            datetime = start_time,
+            time_secs = time,
+            data = list(
+                composition = list(
+                    length = sum(counter_base),
+                    nucleotides = as.list(counter_base)
+                ),
+                cpg_islands = list(
+                    count = counter_CpG,
+                    start = cpg_info
+                )
+            )
+        )
+    }
+    return(result)
 }
 
 
@@ -74,3 +83,17 @@ function(seq) {
             #as.integer(counter_base["G"])
           #)
         #),
+
+        #dataframe
+        # "start": [
+        # {
+        #   "match_CpG@ranges@start": 11
+        # },
+        # {
+        #   "match_CpG@ranges@start": 13
+        # },
+        # {
+        #   "match_CpG@ranges@start": 20
+        # },
+        # {
+        #list

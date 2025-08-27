@@ -1,43 +1,61 @@
-#* entrez devuelve el entrez del value
-#* @param value es un symbol o alias
+#* entrez devuelve el entrez si lo encuentra
+#* @param value 
 #* @get /
-#* @tag endpoints
 #* @serializer unboxedJSON 
-function(value = "DHCR7") {
+function(value) {
 
     start_time <- Sys.time()
-    label <- NULL
+
+    if (is.null(value) || value == "" ) {
+        end_time <- Sys.time()
+        time <- as.numeric(difftime(end_time, start_time, units = "secs"))
+
+        result <- list(
+            code = 400,
+            datetime = start_time,
+            time_secs = time,
+            data = list (
+                message = "Ingrese un valor."
+            )
+        )
+        return(result)
+    } 
+
     entrez <- tryCatch({
-        AnnotationDbi::select(org.Hs.eg.db, keys = value, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
+
+        AnnotationDbi::select(org.Hs.eg.db, keys = value, columns = "ENTREZID", keytype = "ALIAS")$ENTREZID
+
     }, error = function(e) NULL)
-    
 
-    if (length(entrez) != 0) {
-        label <- "SYMBOL" 
-        status <- "success"
-    } else {
+    if (is.null(entrez)) {
         entrez <- tryCatch({
-            AnnotationDbi::select(org.Hs.eg.db, keys = value, columns = "ENTREZID", keytype = "ALIAS")$ENTREZID
+
+            AnnotationDbi::select(org.Hs.eg.db, keys = value, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
+
         }, error = function(e) NULL)
+    } 
     
-        status <- "error"
-
-        if (length(entrez) != 0) {
-            label <- "ALIAS" 
-            status <- "success"
-        }
-    }
-
     end_time <- Sys.time()
     time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
-    result <- list(
-        status = status, 
-        time_secs = time,
-        data = list(
-            value = value,
-            label = label,
-            entrez = entrez
+    
+    if (is.null(entrez) || length(entrez) == 0) {
+        result <- list(
+            code = 404,
+            datetime = start_time,
+            time_secs = time,
+            data = list (
+                message = paste("no se encontro entrez para ", value)
+            )
         )
-    )
+    } else {
+        result <- list(
+            code = 200,
+            datetime = start_time,
+            time_secs = time,
+            data = list( 
+                entrez = unique(entrez)
+            )
+        )
+    }
+    return(result)
 }

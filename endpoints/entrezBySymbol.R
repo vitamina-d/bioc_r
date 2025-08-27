@@ -1,12 +1,15 @@
 #* entrezBySymbol devuelve el entrez si lo encuentra
-#* @param symbol puede ser un symbol 
+#* @param symbol
 #* @get /
 #* @serializer unboxedJSON 
-function(symbol) {    #################################### no acepta numeros ni minusculas
+function(symbol) {
 
     start_time <- Sys.time()
 
     if (is.null(symbol) || symbol == "" ) {
+        end_time <- Sys.time()
+        time <- as.numeric(difftime(end_time, start_time, units = "secs"))
+
         result <- list(
             code = 400,
             datetime = start_time,
@@ -23,7 +26,7 @@ function(symbol) {    #################################### no acepta numeros ni 
         AnnotationDbi::select(org.Hs.eg.db, keys = symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
 
     }, error = function(e) NULL)
-    
+
     end_time <- Sys.time()
     time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
@@ -33,7 +36,7 @@ function(symbol) {    #################################### no acepta numeros ni 
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = "try catch"
+                message = "Error del servidor."
             )
         )
     } else if (length(entrez) == 0) {

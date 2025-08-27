@@ -12,48 +12,39 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 #* @get /
 #* @tag endpoints
 #* @serializer unboxedJSON 
-function(entrez="1717", complete = TRUE) {
+function(entrez, complete = TRUE) {
 
-  start_time <- Sys.time()
+    start_time <- Sys.time()
 
-  #genoma y coord
-  human_genome <- BSgenome.Hsapiens.UCSC.hg38
-  txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
+    human_genome <- BSgenome.Hsapiens.UCSC.hg38
+    txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 
-  ### identificar el gen 
-  #mapIds(org.Hs.eg.db, keys = gene_entrez, column = "SYMBOL", keytype = "ENTREZID")
-  #mapIds(org.Hs.eg.db, keys = gene_symbol, column = "CHR", keytype = "SYMBOL")
-#  entrez <- AnnotationDbi::select(org.Hs.eg.db, keys = gene_symbol, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
+    #coordenadas: objeto GRanges
+    #secuencia: objeto DNAStringSet de biostrings
+    if(complete){
+      
+        coord_gene <- genes(txdb)[entrez]
+        sequence <- getSeq(human_genome, coord_gene) #devuelve la codificante
 
-  ####VALIDAR
+    } else {
+        coord_exones <- exonsBy(txdb, by = "gene")[[entrez]] 
+        seq_exones <- getSeq(human_genome, coord_exones)
 
-  #coordenadas: objeto GRanges
-  #secuencia: objeto DNAStringSet de biostrings
-  if(complete){
-    
-    coord_gene <- genes(txdb)[entrez]
-    sequence <- getSeq(human_genome, coord_gene) #devuelve la codificante 5'→3
+        #exones
+        sequence <- do.call(xscat, as.list(seq_exones))
+    }
 
-  } else {
-      coord_exones <- exonsBy(txdb, by = "gene")[[entrez]] 
-      seq_exones <- getSeq(human_genome, coord_exones)
+    end_time <- Sys.time()
+    time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
-      #exones
-      sequence <- do.call(xscat, as.list(seq_exones))
-  }
-
-#  type <- ifelse(complete, "complete", "exons")
-
-  end_time <- Sys.time()
-  time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
-  result <- list(
-    status = "success", 
-    time_secs = time,
-    data = list(
-      complete = as.logical(complete),
-      sequence_length = nchar(sequence),
-      sequence = as.character(sequence)
+    result <- list(
+        code = 200,
+        datetime = start_time,
+        time_secs = time,
+        data = list(
+            complete = as.logical(complete),
+            sequence_length = nchar(sequence),
+            sequence = as.character(sequence)
+        )
     )
-  )
 }

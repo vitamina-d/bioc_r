@@ -1,6 +1,6 @@
 #* echo back the input
 #* @param msg The message to echo
-#* @get /
+#* @get /echo
 #* @serializer unboxedJSON 
 function(msg = "msg") {
   list(
