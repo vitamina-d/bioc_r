@@ -4,7 +4,7 @@ library(org.Hs.eg.db)
 #* isentrez valida que el valor sea un ENTREZ
 #* @param entrez
 #* @get /
-#* @tag endpoints
+#* @tag entrez
 #* @serializer unboxedJSON 
 function(entrez) {
 
@@ -20,7 +20,8 @@ function(entrez) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = "Ingrese un valor."
+                message = "Ingrese un valor.",
+                is_entrez = NULL
             )
         )
         return(result)
@@ -36,7 +37,8 @@ function(entrez) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = "Error del servidor."
+                message = "Error del servidor.",
+                is_entrez = NULL
             )
         )
     }
@@ -53,6 +55,7 @@ function(entrez) {
         datetime = start_time,
         time_secs = time,
         data = list(
+            message = "Ok.",
             is_entrez = is_entrez
         )
     )

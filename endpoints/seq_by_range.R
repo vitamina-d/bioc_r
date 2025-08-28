@@ -6,6 +6,7 @@ library(Biostrings)
 #* @param start Inicio
 #* @param end Fin
 #* @get /
+#* @tag sequence
 #* @serializer unboxedJSON 
 function(chrom, start, end) {
     start_time <- Sys.time()
@@ -25,6 +26,7 @@ function(chrom, start, end) {
         datetime = start_time,
         time_secs = time,
         data = list(
+            message = "Ok.",
             sequence_length = sequence_length,
             sequence = sequence,
             complete = TRUE

@@ -3,37 +3,35 @@ library(Biostrings)
 #* align devuelve el alineamiento global o local de dos secuecias
 #* @param pattern Lectura
 #* @param subject Genoma de referencia
-#* @param global:boolean Alineamiento global (TRUE) o local (FALSE)
+#* @param type "global", "local", "overlap"
+#* @param match number
+#* @param mismatch number
+#* @param gapOpening number
+#* @param gapExtension number
 #* @post /
-#* @tag endpoints
+#* @tag sequence
 #* @serializer unboxedJSON 
-function(pattern = "", subject = "", global = TRUE) {
-  start_time <- Sys.time()
+function(pattern, subject, type, match, mismatch, gapOpening, gapExtension) { ## allocate 733.5 Mb of memory (i.e. length(pattern) * length(subject) * 3 bytes)
+    start_time <- Sys.time()
 
-  seqA <- DNAString(pattern)
-  seqB <- DNAString(subject)
+    seqA <- DNAString(pattern)
+    seqB <- DNAString(subject)
 
-  type <- ifelse(global, "global", "local")
-  gapOpening <- -2
-  gapExtension <- -1
+    matrix <- nucleotideSubstitutionMatrix(match=match, mismatch=mismatch, baseOnly=TRUE)
+    align <- pairwiseAlignment(	seqA, seqB, type = type, substitutionMatrix = matrix, gapOpening = gapOpening, gapExtension = gapExtension)
 
-  align <- pairwiseAlignment(	seqA, seqB, substitutionMatrix = NULL, gapOpening = gapOpening, gapExtension = gapExtension, type = type)
-  #substitutionMatrix = NULL: iguales
+    end_time <- Sys.time()
+    time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
-  end_time <- Sys.time()
-  time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
-  response <- list(
-    code = 200,
-    datetime = start_time,
-    time_secs = time,
-    data = list(
-      score = score(align),
-      gapOpening = gapOpening,
-      gapExtension = gapExtension,
-      type = type,
-      pattern_align = as.character(pattern(align)),
-      subject_align = as.character(subject(align))
+    response <- list(
+        code = 200,
+        datetime = start_time,
+        time_secs = time,
+        data = list(
+          message = "Ok",
+          score = score(align),
+          pattern_align = as.character(pattern(align)),
+          subject_align = as.character(subject(align))
+        )
     )
-  )
 }

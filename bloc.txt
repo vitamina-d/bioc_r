@@ -6,6 +6,8 @@ function(req,res)?
 
 * org.Hs.egALIAS is an R object that provides mappings between common gene symbol identifiers and entrez gene identifiers. Feb/2025
     https://bioconductor.org/packages/release/data/annotation/manuals/org.Hs.eg.db/man/org.Hs.eg.db.pdf
+* Biostrings
+    https://bioconductor.org/packages/release/bioc/manuals/Biostrings/man/Biostrings.pdf
 
 https://ploomber.io/blog/restapi-plumber/
 

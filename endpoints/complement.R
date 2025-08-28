@@ -4,13 +4,13 @@ library(Biostrings)
 #* @param seq Secuencia
 #* @param is_reverse:boolean 
 #* @param is_complement:boolean 
-#* @get /
-#* @tag endpoints
+#* @post /
+#* @tag sequence
 #* @serializer unboxedJSON 
 function(seq, is_reverse, is_complement) {
 
     start_time <- Sys.time()
-sequence <- seq
+    sequence <- seq
     DNA_str <- DNAString(seq)
 
     if (is_reverse) {
@@ -27,6 +27,7 @@ sequence <- seq
         datetime = start_time,
         time_secs = time,
         data = list(
+            message = "Ok",
             sequence = as.character(sequence) # AAString a texto
         )
     )

@@ -1,6 +1,7 @@
 #* entrezBySymbol devuelve el entrez si lo encuentra
 #* @param symbol
 #* @get /
+#* @tag entrez
 #* @serializer unboxedJSON 
 function(symbol) {
 
@@ -15,7 +16,8 @@ function(symbol) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = "Ingrese un valor."
+                message = "Ingrese un valor.",
+                entrez = NULL
             )
         )
         return(result)
@@ -36,7 +38,8 @@ function(symbol) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = "Error del servidor."
+                message = "Error del servidor.",
+                entrez = NULL
             )
         )
     } else if (length(entrez) == 0) {
@@ -45,7 +48,8 @@ function(symbol) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = paste("no se encontro entrez para ", symbol)
+                message = paste("no se encontro entrez para ", symbol),
+                entrez = NULL
             )
         )
     } else {
@@ -54,6 +58,7 @@ function(symbol) {
             datetime = start_time,
             time_secs = time,
             data = list( 
+                message = "Ok",
                 entrez = unique(entrez)
             )
         )

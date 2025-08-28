@@ -4,7 +4,7 @@ library(Biostrings)
 #* @post /
 #* @parser json
 #* @param seq
-#* @tag endpoints
+#* @tag sequence
 #* @serializer unboxedJSON 
 function(seq) {
 
@@ -19,7 +19,9 @@ function(seq) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = "Ingrese un valor."
+                message = "Ingrese un valor.",
+                composition = NULL,
+                cpg_islands = NULL
             )
         )
         return(result)
@@ -39,7 +41,9 @@ function(seq) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = "Ingrese una secuencia valida."
+                message = "Ingrese una secuencia valida.",
+                composition = NULL,
+                cpg_islands = NULL
             )
         )
         return(response)
@@ -59,6 +63,7 @@ function(seq) {
             datetime = start_time,
             time_secs = time,
             data = list(
+                message = "Ok.",
                 composition = list(
                     length = sum(counter_base),
                     nucleotides = as.list(counter_base)

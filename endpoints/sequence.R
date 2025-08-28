@@ -10,7 +10,7 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 #* @param entrez EntrezID
 #* @param complete:boolean Secuencia completa (TRUE) o solo exones (FALSE)
 #* @get /
-#* @tag endpoints
+#* @tag sequence
 #* @serializer unboxedJSON 
 function(entrez, complete = TRUE) {
 
@@ -42,6 +42,7 @@ function(entrez, complete = TRUE) {
         datetime = start_time,
         time_secs = time,
         data = list(
+            message = "Ok.",
             complete = as.logical(complete),
             sequence_length = nchar(sequence),
             sequence = as.character(sequence)

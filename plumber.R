@@ -19,10 +19,12 @@ api$mount("/sequence", Plumber$new("endpoints/sequence.R"))
 api$mount("/percent", Plumber$new("endpoints/percent.R"))
 api$mount("/align", Plumber$new("endpoints/align.R"))
 api$mount("/seq_by_range", Plumber$new("endpoints/seq_by_range.R"))
+
 api$mount("/echo", Plumber$new("endpoints/echo.R"))
 
-
+api$mount("/genename", Plumber$new("endpoints/genename.R"))
 api$mount("/table", Plumber$new("endpoints/table.R"))
+
 api$mount("/complement", Plumber$new("endpoints/complement.R"))
 api$mount("/entrez", Plumber$new("endpoints/entrez.R"))
 api$mount("/entrezByAlias", Plumber$new("endpoints/entrezByAlias.R"))

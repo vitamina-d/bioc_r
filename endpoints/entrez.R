@@ -1,6 +1,7 @@
 #* entrez devuelve el entrez si lo encuentra
 #* @param value 
 #* @get /
+#* @tag entrez
 #* @serializer unboxedJSON 
 function(value) {
 
@@ -15,7 +16,8 @@ function(value) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = "Ingrese un valor."
+                message = "Ingrese un valor.",
+                entrez = NULL
             )
         )
         return(result)
@@ -44,7 +46,8 @@ function(value) {
             datetime = start_time,
             time_secs = time,
             data = list (
-                message = paste("no se encontro entrez para ", value)
+                message = paste("no se encontro entrez para ", value),
+                entrez = NULL
             )
         )
     } else {
@@ -53,6 +56,7 @@ function(value) {
             datetime = start_time,
             time_secs = time,
             data = list( 
+                message = "Ok",
                 entrez = unique(entrez)
             )
         )
