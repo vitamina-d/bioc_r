@@ -23,10 +23,10 @@ function(chrom, start, end) {
 
     result <- list(
         code = 200,
+        message = "Ok.",
         datetime = start_time,
         time_secs = time,
         data = list(
-            message = "Ok.",
             sequence_length = sequence_length,
             sequence = sequence,
             complete = TRUE

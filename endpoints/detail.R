@@ -21,36 +21,26 @@ function(entrez) {
     if (is.null(detail)) {
         response <- list(
             code = 500,
+            message = "try catch",
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = "try catch",
-                entrez = NULL,
-                symbol = NULL,
-                genetype = NULL,
-                alias = NULL
-            )
+            data = NULL
         )
     } else if (length(detail) == 0) {
         response <- list(
             code = 404,
+            message = paste("no se encontraron valores para el entrez ", alias),
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = paste("no se encontraron valores para el entrez ", alias),
-                entrez = NULL,
-                symbol = NULL,
-                genetype = NULL,
-                alias = NULL
-            )
+            data = NULL
         )
     } else {
       response <- list(
         code = 200,
+        message = "Ok",
         datetime = start_time,
         time_secs = time,
         data = list(
-            message = "Ok",
             entrez = entrez,
             symbol = unique(details$SYMBOL),
             genetype = unique(details$GENETYPE),

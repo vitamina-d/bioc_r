@@ -17,12 +17,10 @@ function(entrez) {
 
         result <- list(
             code = 400,
+            message = "Ingrese un valor.",
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = "Ingrese un valor.",
-                is_entrez = NULL
-            )
+            data = NULL
         )
         return(result)
     } 
@@ -34,12 +32,10 @@ function(entrez) {
     if (is.null(ids)) {
         result <- list(
             code = 500,
+            message = "Error del servidor.",
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = "Error del servidor.",
-                is_entrez = NULL
-            )
+            data = NULL
         )
     }
 
@@ -52,10 +48,10 @@ function(entrez) {
 
     result <- list(
         code = 200,
+        message = "Ok.",
         datetime = start_time,
         time_secs = time,
         data = list(
-            message = "Ok.",
             is_entrez = is_entrez
         )
     )

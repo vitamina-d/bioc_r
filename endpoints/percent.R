@@ -16,13 +16,10 @@ function(seq) {
 
         result <- list(
             code = 400,
+            message = "Ingrese un valor.",
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = "Ingrese un valor.",
-                composition = NULL,
-                cpg_islands = NULL
-            )
+            data = NULL
         )
         return(result)
     }  
@@ -38,13 +35,10 @@ function(seq) {
 
         result <- list(
             code = 400,
+            message = "Ingrese una secuencia valida.",
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = "Ingrese una secuencia valida.",
-                composition = NULL,
-                cpg_islands = NULL
-            )
+            data = NULL
         )
         return(response)
 
@@ -60,10 +54,10 @@ function(seq) {
 
         result <- list(
             code = 200,
+            message = "Ok.",
             datetime = start_time,
             time_secs = time,
             data = list(
-                message = "Ok.",
                 composition = list(
                     length = sum(counter_base),
                     nucleotides = as.list(counter_base)

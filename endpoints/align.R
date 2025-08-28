@@ -26,10 +26,10 @@ function(pattern, subject, type, gapOpening, gapExtension) { ## allocate 733.5 M
 
     response <- list(
         code = 200,
+        message = "Ok",
         datetime = start_time,
         time_secs = time,
         data = list(
-          message = "Ok",
           score = score(align),
           pattern_align = as.character(pattern(align)),
           subject_align = as.character(subject(align))

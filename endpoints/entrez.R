@@ -43,20 +43,18 @@ function(value) {
     if (is.null(entrez) || length(entrez) == 0) {
         result <- list(
             code = 404,
+            message = paste("no se encontro entrez para ", value),
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = paste("no se encontro entrez para ", value),
-                entrez = NULL
-            )
+            data = NULL
         )
     } else {
         result <- list(
             code = 200,
+            message = "Ok",
             datetime = start_time,
             time_secs = time,
             data = list( 
-                message = "Ok",
                 entrez = unique(entrez)
             )
         )

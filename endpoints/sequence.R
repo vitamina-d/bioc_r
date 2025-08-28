@@ -39,10 +39,10 @@ function(entrez, complete = TRUE) {
 
     result <- list(
         code = 200,
+        message = "Ok.",
         datetime = start_time,
         time_secs = time,
         data = list(
-            message = "Ok.",
             complete = as.logical(complete),
             sequence_length = nchar(sequence),
             sequence = as.character(sequence)

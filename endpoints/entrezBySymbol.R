@@ -13,12 +13,10 @@ function(symbol) {
 
         result <- list(
             code = 400,
+            message = "Ingrese un valor.",
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = "Ingrese un valor.",
-                entrez = NULL
-            )
+            data = NULL
         )
         return(result)
     } 
@@ -35,32 +33,26 @@ function(symbol) {
     if (is.null(entrez)) {
         result <- list(
             code = 500,
+            message = "Error del servidor.",
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = "Error del servidor.",
-                entrez = NULL
-            )
+            data = NULL
         )
     } else if (length(entrez) == 0) {
         result <- list(
             code = 404,
+            message = paste("no se encontro entrez para ", symbol),
             datetime = start_time,
             time_secs = time,
-            data = list (
-                message = paste("no se encontro entrez para ", symbol),
-                entrez = NULL
-            )
+            data = NULL
         )
     } else {
         result <- list(
             code = 200,
+            message = "Ok",
             datetime = start_time,
             time_secs = time,
-            data = list( 
-                message = "Ok",
-                entrez = unique(entrez)
-            )
+            data = NULL
         )
     }
     return(result)

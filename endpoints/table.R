@@ -24,10 +24,10 @@ function() {
 
     return(list(
         code = 200,
+        message = "Ok.",
         datetime = start_time,
         time_secs = time,
         data = list (
-            message = "Ok.",
             count = nrow(select),
             table = select
             )
