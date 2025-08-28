@@ -1,22 +1,23 @@
 library(Biostrings)
 
 #* complement devuelve la secuencia complementaria e inversa
-#* @param seq Secuencia
-#* @param is_reverse:boolean 
-#* @param is_complement:boolean 
+#* @param sequence Secuencia
+#* @param to_reverse:boolean 
+#* @param to_complement:boolean 
 #* @post /
 #* @tag sequence
 #* @serializer unboxedJSON 
-function(seq, is_reverse, is_complement) {
+function(sequence, to_reverse, to_complement) {
 
     start_time <- Sys.time()
-    sequence <- seq
-    DNA_str <- DNAString(seq)
+    DNA_str <- DNAString(sequence)
 
-    if (is_reverse) {
-        sequence <- reverse(DNA_str)
-    } else if (is_complement) {
-        sequence <- complement(DNA_str)
+    if (to_reverse) {
+        DNA_str <- reverse(DNA_str)
+    } 
+    
+    if (to_complement) {
+        DNA_str <- complement(DNA_str)
     } 
 
     end_time <- Sys.time()
@@ -28,7 +29,7 @@ function(seq, is_reverse, is_complement) {
         time_secs = time,
         data = list(
             message = "Ok",
-            sequence = as.character(sequence) # AAString a texto
+            sequence = as.character(DNA_str) # AAString a texto
         )
     )
 

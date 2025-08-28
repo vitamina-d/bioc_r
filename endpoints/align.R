@@ -4,21 +4,22 @@ library(Biostrings)
 #* @param pattern Lectura
 #* @param subject Genoma de referencia
 #* @param type "global", "local", "overlap"
-#* @param match number
-#* @param mismatch number
-#* @param gapOpening number
-#* @param gapExtension number
+#* @param gapOpening:number
+#* @param gapExtension:number
 #* @post /
 #* @tag sequence
 #* @serializer unboxedJSON 
-function(pattern, subject, type, match, mismatch, gapOpening, gapExtension) { ## allocate 733.5 Mb of memory (i.e. length(pattern) * length(subject) * 3 bytes)
+function(pattern, subject, type, gapOpening, gapExtension) { ## allocate 733.5 Mb of memory (i.e. length(pattern) * length(subject) * 3 bytes)
     start_time <- Sys.time()
 
+    gapOpening <- as.numeric(gapOpening)
+    gapExtension <- as.numeric(gapExtension)
+    
     seqA <- DNAString(pattern)
     seqB <- DNAString(subject)
 
-    matrix <- nucleotideSubstitutionMatrix(match=match, mismatch=mismatch, baseOnly=TRUE)
-    align <- pairwiseAlignment(	seqA, seqB, type = type, substitutionMatrix = matrix, gapOpening = gapOpening, gapExtension = gapExtension)
+    #matrix <- nucleotideSubstitutionMatrix(match = match, mismatch = mismatch, baseOnly=TRUE)
+    align <- pairwiseAlignment(	seqA, seqB, type = type, substitutionMatrix = NULL, gapOpening = gapOpening, gapExtension = gapExtension)
 
     end_time <- Sys.time()
     time <- as.numeric(difftime(end_time, start_time, units = "secs"))
