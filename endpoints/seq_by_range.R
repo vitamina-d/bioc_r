@@ -2,7 +2,7 @@ library(BSgenome.Hsapiens.UCSC.hg38)
 library(Biostrings)
 
 #* seq_by_range devuelve la secuencia dado el cromosoma y el rango
-#* @param chrom Cromosoma (ej: "dhcr7")
+#* @param chrom Cromosoma (ej: 11)
 #* @param start Inicio
 #* @param end Fin
 #* @get /
@@ -15,9 +15,7 @@ function(chrom, start, end) {
     end <- as.integer(end)
 
     seq <- BSgenome.Hsapiens.UCSC.hg38[[chrom]][start:end]
-    sequence <- as.character(seq)
-    sequence_length <- nchar(sequence)
-    
+
     end_time <- Sys.time()
     time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
@@ -27,8 +25,8 @@ function(chrom, start, end) {
         datetime = start_time,
         time_secs = time,
         data = list(
-            sequence_length = sequence_length,
-            sequence = sequence,
+            sequence_length = nchar(sequence),
+            sequence = as.character(seq),
             complete = TRUE
         )
     )
