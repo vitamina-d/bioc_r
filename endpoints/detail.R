@@ -11,7 +11,7 @@ function(entrez) {
     start_time <- Sys.time()
 
     details <- tryCatch({
-        AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("GENETYPE", "SYMBOL", "ALIAS"), keytype = "ENTREZID")
+        AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("GENETYPE", "GENENAME", "SYMBOL", "ALIAS"), keytype = "ENTREZID")
     }, error = function(e) NULL)
 
     end_time <- Sys.time()
@@ -43,6 +43,7 @@ function(entrez) {
         data = list(
             entrez = entrez,
             symbol = unique(details$SYMBOL),
+            genename = unique(details$GENENAME),
             genetype = unique(details$GENETYPE),
             alias = unique(details$ALIAS)
         )
