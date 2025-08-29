@@ -25,7 +25,7 @@ function(chrom, start, end) {
         datetime = start_time,
         time_secs = time,
         data = list(
-            sequence_length = nchar(sequence),
+            sequence_length = nchar(seq),
             sequence = as.character(seq),
             complete = TRUE
         )
