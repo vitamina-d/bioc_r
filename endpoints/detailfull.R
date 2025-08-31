@@ -16,8 +16,27 @@ function(entrez = "1717") {
 
     details <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENSEMBL", "ENSEMBLPROT", "UNIPROT", "ENTREZID", "GENETYPE", "MAP", "SYMBOL", "ALIAS"), keytype = "ENTREZID")
 
-    range <- genes(txdb)[entrez]
-    range_df <- as.data.frame(range)
+    #range <- genes(txdb)[entrez] #devuelve GRanges si son single strand (rango simple)
+    #range_df <- as.data.frame(range)
+
+    grangeslist <- genes(txdb, single.strand.genes.only = FALSE)[entrez] ##GRangesList: el gen tiene varios rangos.
+    granges <- grangeslist[[1]]
+
+    locations <- list()
+    for (i in seq_along(granges)) {
+        locations[[i]] <- list(
+            strand = as.character(strand(granges[i])),
+            seqnames = as.character(seqnames(granges[i])),
+            start = start(granges[i]),
+            end = end(granges[i]),
+            length = width(granges[i])
+        )
+    }
+
+    ensembl_id_gene <- unique(details$ENSEMBL)
+    if (length(ensembl_id_gene) == 1)  {
+        ensembl_id_gene <- list(ensembl_id_gene)
+    } 
 
     end_time <- Sys.time()
     time <- as.numeric(difftime(end_time, start_time, units = "secs"))
@@ -32,15 +51,9 @@ function(entrez = "1717") {
             alias = unique(details$ALIAS),
             symbol = unique(details$SYMBOL),
             genetype = unique(details$GENETYPE),
-            location = list(
-                citogenetic = unique(details$MAP),
-                strand = as.character(range_df$strand),
-                chr = as.character(range_df$seqnames),
-                start = range_df$start,
-                end = range_df$end,
-                length = range_df$width
-            ),
-            ensembl_id_gene = unique(details$ENSEMBL),
+            citogenetic = unique(details$MAP), #principal
+            location = locations,
+            ensembl_id_gene = ensembl_id_gene,
             ensembl_id_protein = unique(details$ENSEMBLPROT),
             uniprot_ids = unique(details$UNIPROT)
           )

@@ -8,6 +8,8 @@ function(req,res)?
     https://bioconductor.org/packages/release/data/annotation/manuals/org.Hs.eg.db/man/org.Hs.eg.db.pdf
 * Biostrings
     https://bioconductor.org/packages/release/bioc/manuals/Biostrings/man/Biostrings.pdf
+*GenomicFeatures (Granges-GrangesList)
+    https://bioconductor.org/packages/release/bioc/manuals/GenomicFeatures/man/GenomicFeatures.pdf
 
 https://ploomber.io/blog/restapi-plumber/
 
