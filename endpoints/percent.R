@@ -71,28 +71,3 @@ function(seq) {
     }
     return(result)
 }
-
-
-        #nucleotides = list(
-         # labels = c("A", "T", "C", "G"),
-          #counts = c(
-           # as.integer(counter_base["A"]),
-            #as.integer(counter_base["T"]),
-            #as.integer(counter_base["C"]),
-            #as.integer(counter_base["G"])
-          #)
-        #),
-
-        #dataframe
-        # "start": [
-        # {
-        #   "match_CpG@ranges@start": 11
-        # },
-        # {
-        #   "match_CpG@ranges@start": 13
-        # },
-        # {
-        #   "match_CpG@ranges@start": 20
-        # },
-        # {
-        #list

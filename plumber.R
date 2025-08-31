@@ -20,6 +20,7 @@ api$mount("/isentrez", Plumber$new("endpoints/isentrez.R"))
 api$mount("/sequence", Plumber$new("endpoints/sequence.R"))
 api$mount("/percent", Plumber$new("endpoints/percent.R"))
 api$mount("/seq_by_range", Plumber$new("endpoints/seq_by_range.R"))
+api$mount("/stats", Plumber$new("endpoints/sequence_and_stats.R"))
 
 api$mount("/echo", Plumber$new("endpoints/echo.R"))
 

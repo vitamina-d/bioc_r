@@ -19,19 +19,27 @@ function(entrez = "1717") {
     #range <- genes(txdb)[entrez] #devuelve GRanges si son single strand (rango simple)
     #range_df <- as.data.frame(range)
 
-    grangeslist <- genes(txdb, single.strand.genes.only = FALSE)[entrez] ##GRangesList: el gen tiene varios rangos.
-    granges <- grangeslist[[1]]
+    #grangeslist <- genes(txdb, single.strand.genes.only = FALSE)[entrez] ##GRangesList: el gen tiene varios rangos.
+    #granges <- grangeslist[[1]]
 
     locations <- list()
-    for (i in seq_along(granges)) {
-        locations[[i]] <- list(
-            strand = as.character(strand(granges[i])),
-            seqnames = as.character(seqnames(granges[i])),
-            start = start(granges[i]),
-            end = end(granges[i]),
-            length = width(granges[i])
-        )
-    }
+    
+    grangeslist <- tryCatch({
+        genes(txdb, single.strand.genes.only = FALSE)[entrez]
+    }, error = function(e) NULL)
+
+    if (!is.null(grangeslist) && length(grangeslist) > 0) {
+        granges <- grangeslist[[1]]
+        for (i in seq_along(granges)) {
+            locations[[i]] <- list(
+                strand = as.character(strand(granges[i])),
+                seqnames = as.character(seqnames(granges[i])),
+                start = start(granges[i]),
+                end = end(granges[i]),
+                length = width(granges[i])
+            )
+        }
+    } 
 
     ensembl_id_gene <- unique(details$ENSEMBL)
     if (length(ensembl_id_gene) == 1)  {
