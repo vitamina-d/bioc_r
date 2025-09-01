@@ -13,6 +13,7 @@ library(plumber)
 
 api <- Plumber$new()
 api$mount("/align", Plumber$new("endpoints/align.R"))
+api$mount("/autocomplete", Plumber$new("endpoints/autocomplete.R"))
 api$mount("/complement", Plumber$new("endpoints/complement.R"))
 api$mount("/detail", Plumber$new("endpoints/detail.R"))
 api$mount("/detailfull", Plumber$new("endpoints/detailfull.R"))
