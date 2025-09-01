@@ -11,9 +11,12 @@ function(input) {
     start_time <- Sys.time()
 
     alias <- unique(keys(org.Hs.eg.db, keytype = "ALIAS"))
-    
-    matches <- grep(paste0("^", input), alias, ignore.case = TRUE, value = TRUE)
 
+    matches <- grep(input, alias, ignore.case = TRUE, value = TRUE)
+
+    if (length(matches) == 0)  {
+        matches <- NULL
+    } 
     end_time <- Sys.time()
     time <- as.numeric(difftime(end_time, start_time, units = "secs"))
     
@@ -23,7 +26,7 @@ function(input) {
             message = paste("no se encontro"),
             datetime = start_time,
             time_secs = time,
-            data = NULL
+            data = list()
         )
     } else {
         result <- list(
@@ -31,9 +34,7 @@ function(input) {
             message = "Ok",
             datetime = start_time,
             time_secs = time,
-            data = list(     
-                head(matches, 20)
-            )
+            data = head(matches, 20)
         )
     }
     return(result)
