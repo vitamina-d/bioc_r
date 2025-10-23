@@ -10,8 +10,6 @@ library(Biostrings)
 #* @tag sequence
 #* @serializer unboxedJSON 
 function(pattern, subject, type, gapOpening, gapExtension) { ## allocate 733.5 Mb of memory (i.e. length(pattern) * length(subject) * 3 bytes)
-    start_time <- Sys.time()
-
     gapOpening <- as.numeric(gapOpening)
     gapExtension <- as.numeric(gapExtension)
     
@@ -21,14 +19,9 @@ function(pattern, subject, type, gapOpening, gapExtension) { ## allocate 733.5 M
     #matrix <- nucleotideSubstitutionMatrix(match = match, mismatch = mismatch, baseOnly=TRUE)
     align <- pairwiseAlignment(	seqA, seqB, type = type, substitutionMatrix = NULL, gapOpening = gapOpening, gapExtension = gapExtension)
 
-    end_time <- Sys.time()
-    time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
     response <- list(
         code = 200,
         message = "Ok",
-        datetime = start_time,
-        time_secs = time,
         data = list(
           score = score(align),
           pattern_align = as.character(pattern(align)),

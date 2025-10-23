@@ -9,21 +9,14 @@ library(Biostrings)
 #* @tag sequence
 #* @serializer unboxedJSON 
 function(chrom, start, end) {
-    start_time <- Sys.time()
-
     start <- as.integer(start)
     end <- as.integer(end)
 
     seq <- BSgenome.Hsapiens.UCSC.hg38[[chrom]][start:end]
 
-    end_time <- Sys.time()
-    time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
     result <- list(
         code = 200,
         message = "Ok.",
-        datetime = start_time,
-        time_secs = time,
         data = list(
             sequence_length = nchar(seq),
             sequence = as.character(seq),

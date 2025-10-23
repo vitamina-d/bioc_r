@@ -14,18 +14,14 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 #* @serializer unboxedJSON 
 function(entrez, complete = TRUE) {
 
-    start_time <- Sys.time()
-
     human_genome <- BSgenome.Hsapiens.UCSC.hg38
     txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 
     #coordenadas: objeto GRanges
     #secuencia: objeto DNAStringSet de biostrings
-    if(complete){
-      
+    if(complete){      
         coord_gene <- genes(txdb)[entrez]
         sequence <- getSeq(human_genome, coord_gene) #devuelve la codificante
-
     } else {
         coord_exones <- exonsBy(txdb, by = "gene")[[entrez]] 
         seq_exones <- getSeq(human_genome, coord_exones)
@@ -34,14 +30,9 @@ function(entrez, complete = TRUE) {
         sequence <- do.call(xscat, as.list(seq_exones))
     }
 
-    end_time <- Sys.time()
-    time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
     result <- list(
         code = 200,
         message = "Ok.",
-        datetime = start_time,
-        time_secs = time,
         data = list(
             complete = as.logical(complete),
             sequence_length = nchar(sequence),

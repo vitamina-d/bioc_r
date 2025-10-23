@@ -14,8 +14,6 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 #* @serializer unboxedJSON 
 function(entrez, complete = TRUE) {
 
-    start_time <- Sys.time()
-
     human_genome <- BSgenome.Hsapiens.UCSC.hg38
     txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 
@@ -29,14 +27,9 @@ function(entrez, complete = TRUE) {
         }, error = function(e) NULL)
 
         if (is.null(coord_gene)) {
-            end_time <- Sys.time()
-            time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
             result <- list(
                 code = 404,
                 message = paste("no se encontro secuencia para el entrez: ", entrez),
-                datetime = start_time,
-                time_secs = time,
                 data = NULL
             )
             return(result)
@@ -56,14 +49,9 @@ function(entrez, complete = TRUE) {
         }, error = function(e) NULL)
 
         if (is.null(coord_exones)) {
-            end_time <- Sys.time()
-            time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
             result <- list(
                 code = 404,
                 message = paste("no se encontro secuencia para el entrez: ", entrez),
-                datetime = start_time,
-                time_secs = time,
                 data = NULL
             )
             return(result)
@@ -79,14 +67,9 @@ function(entrez, complete = TRUE) {
     match_CpG <- matchPattern(pattern_CpG, DNA_str)
     cpg_info <- as.list(match_CpG@ranges@start)
 
-    end_time <- Sys.time()
-    time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
     result <- list(
         code = 200,
         message = "Ok.",
-        datetime = start_time,
-        time_secs = time,
         data = list(
             complete = as.logical(complete),
             sequence = as.character(DNA_str),

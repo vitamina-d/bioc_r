@@ -10,8 +10,6 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 #* @serializer unboxedJSON 
 function(entrez = "1717") {
 
-    start_time <- Sys.time()
-
     txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 
     details <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENSEMBL", "ENSEMBLPROT", "UNIPROT", "ENTREZID", "GENETYPE", "MAP", "SYMBOL", "ALIAS"), keytype = "ENTREZID")
@@ -46,14 +44,9 @@ function(entrez = "1717") {
         ensembl_id_gene <- list(ensembl_id_gene)
     } 
 
-    end_time <- Sys.time()
-    time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
     response <- list(
         code = 200,
         message = "Ok",
-        datetime = start_time,
-        time_secs = time,
         data = list(
             entrez = entrez,
             alias = unique(details$ALIAS),

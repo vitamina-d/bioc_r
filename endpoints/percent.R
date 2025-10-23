@@ -8,17 +8,10 @@ library(Biostrings)
 #* @serializer unboxedJSON 
 function(seq) {
 
-    start_time <- Sys.time()
-
     if (is.null(seq) || seq == "" ) {
-        end_time <- Sys.time()
-        time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
         result <- list(
             code = 400,
             message = "Ingrese un valor.",
-            datetime = start_time,
-            time_secs = time,
             data = NULL
         )
         return(result)
@@ -30,14 +23,9 @@ function(seq) {
     }, error = function(e) NULL)
       
     if (is.null(DNA_str)) {
-        end_time <- Sys.time()
-        time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
         result <- list(
             code = 400,
             message = "Ingrese una secuencia valida.",
-            datetime = start_time,
-            time_secs = time,
             data = NULL
         )
         return(response)
@@ -49,14 +37,9 @@ function(seq) {
         match_CpG <- matchPattern(pattern_CpG, DNA_str)
         cpg_info <- as.list(match_CpG@ranges@start)
 
-        end_time <- Sys.time()
-        time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-
         result <- list(
             code = 200,
             message = "Ok.",
-            datetime = start_time,
-            time_secs = time,
             data = list(
                 composition = list(
                     length = sum(counter_base),

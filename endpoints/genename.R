@@ -7,17 +7,10 @@ library(org.Hs.eg.db)
 #* @serializer unboxedJSON 
 function() {
 
-    start_time <- Sys.time()
-
     list <- org.Hs.egGENENAME
-
-    end_time <- Sys.time()
-    time <- as.numeric(difftime(end_time, start_time, units = "secs"))
 
     return(list(
         code = 200,
-        datetime = start_time,
-        time_secs = time,
         data = list (
             message = "Ok.",
             count = nrow(list),
