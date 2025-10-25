@@ -72,10 +72,7 @@ function(entrez, res) {
     # locations
     grangeslist <- tryCatch({
         genes(txdb, single.strand.genes.only = FALSE)[entrez]
-    }, error = function(e) {
-        res$status <- 500
-        stop(paste("Error de servicio R (location): ", e$message), call. = FALSE)
-    })
+    }, error = function(e) {NULL})
     #print("grangeslist")
     #print(grangeslist)
 
@@ -124,3 +121,5 @@ function(entrez, res) {
     #grangeslist <- genes(txdb, single.strand.genes.only = FALSE)[entrez] ##GRangesList: el gen tiene varios rangos.
     #granges <- grangeslist[[1]]
 }
+
+# 1818 existe org.Hs.eg.db pero no tiene anotaciones en TxDb
