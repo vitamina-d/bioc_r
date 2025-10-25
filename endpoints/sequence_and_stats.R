@@ -8,58 +8,29 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
 #* sequence_and_stats devuelve la secuencia completa o de exones a partir de su entrez y percent
 #* @param entrez EntrezID
-#* @param complete:boolean Secuencia completa (TRUE) o solo exones (FALSE)
 #* @get /
 #* @tag sequence
 #* @serializer unboxedJSON 
-function(entrez, complete = TRUE, res) {
+function(entrez, res) {
 
     human_genome <- BSgenome.Hsapiens.UCSC.hg38
     txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 
     #coordenadas: objeto GRanges
     #secuencia: objeto DNAStringSet de biostrings
-    if(complete){
-        #coord_gene <- genes(txdb)[entrez]
-        
-        coord_gene <- tryCatch({
-            genes(txdb)[entrez]
-        }, error = function(e) NULL)
+    coord_gene <- tryCatch({
+        genes(txdb)[entrez]
+    }, error = function(e) {
+        res$status <- 404
+        stop(paste("No se encontro el entrez: ", entrez), call. = FALSE)
+    })
 
-        if (is.null(coord_gene)) {
-            result <- list(
-                code = 404,
-                message = paste("no se encontro secuencia para el entrez: ", entrez),
-                data = NULL
-            )
-            return(result)
-        } 
-
-        sequence <- getSeq(human_genome, coord_gene) 
-        DNA_str <- unlist(sequence)
-
-    } else {
-
-        #coord_exones <- exonsBy(txdb, by = "gene")[[entrez]] 
-        #seq_exones <- getSeq(human_genome, coord_exones)
-        #DNA_str <- do.call(xscat, as.list(seq_exones)) # concatenar 
-
-        coord_exones <- tryCatch({
-            exonsBy(txdb, by = "gene")[[entrez]] 
-        }, error = function(e) NULL)
-
-        if (is.null(coord_exones)) {
-            result <- list(
-                code = 404,
-                message = paste("no se encontro secuencia para el entrez: ", entrez),
-                data = NULL
-            )
-            return(result)
-        } 
-        coord_exones <- exonsBy(txdb, by = "gene")[[entrez]] 
-        seq_exones <- getSeq(human_genome, coord_exones)
-        DNA_str <- do.call(xscat, as.list(seq_exones)) # concatenar         
+    if (length(coord_gene) == 0) {
+        res$status <- 404
+        stop(paste("No se encontro el entrez: ", entrez), call. = FALSE)
     }
+    seq_gene <- getSeq(human_genome, coord_gene)
+    DNA_str <- unlist(seq_gene) 
     
     counter_base <- alphabetFrequency(DNA_str, baseOnly = TRUE)
     pattern_CpG <- DNAString("CG")
@@ -71,14 +42,13 @@ function(entrez, complete = TRUE, res) {
         code = 200,
         message = "Ok.",
         data = list(
-            complete = as.logical(complete),
-            sequence = as.character(DNA_str),
-            length = nchar(DNA_str),
+            sequence_length = nchar(DNA_str),
             nucleotides = as.list(counter_base),
             cpg_islands = list(
                 count = counter_CpG,
                 start = cpg_info
-            )
+            ),
+            sequence = as.character(DNA_str)
         )
     )
 }

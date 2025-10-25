@@ -34,9 +34,13 @@ function(chrom, start, end, res) {
             code = 200,
             message = "Ok.",
             data = list(
-                sequence_length = nchar(seq),
-                sequence = as.character(seq),
-                complete = TRUE
+                list(
+                    index = 1,
+                    start = start,
+                    end = end,
+                    sequence_length = nchar(seq),
+                    sequence = as.character(seq)
+                )
             )
         )
     }, error = function(e) {

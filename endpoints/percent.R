@@ -21,25 +21,24 @@ function(seq, res) {
         res$status <- 400
         stop(paste("No se puede convertir a DNAString:", e$message), call. = FALSE)
     })
-      
+    
     counter_base <- alphabetFrequency(DNA_str, baseOnly = TRUE)
-    pattern_CpG <- "CG"
+    pattern_CpG <- DNAString("CG")
     counter_CpG <- countPattern(pattern_CpG, DNA_str)
     match_CpG <- matchPattern(pattern_CpG, DNA_str)
     cpg_info <- as.list(match_CpG@ranges@start)
 
-    list(
+    result <- list(
         code = 200,
         message = "Ok.",
         data = list(
-            composition = list(
-                length = sum(counter_base),
-                nucleotides = as.list(counter_base)
-            ),
+            sequence_length = nchar(DNA_str),
+            nucleotides = as.list(counter_base),
             cpg_islands = list(
                 count = counter_CpG,
                 start = cpg_info
-            )
+            ),
+            sequence = as.character(DNA_str)
         )
     )
 }

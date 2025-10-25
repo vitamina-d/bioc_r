@@ -6,13 +6,12 @@ library(org.Hs.eg.db)
 library(GenomicFeatures)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* stats devuelve la secuencia completa o de exones a partir de su entrez
+#* stats devuelve la secuencia completa a partir de su entrez
 #* @param entrez EntrezID
-#* @param complete:boolean Secuencia completa (TRUE) o solo exones (FALSE)
 #* @get /
 #* @tag sequence
 #* @serializer unboxedJSON 
-function(entrez, complete = TRUE, res) {
+function(entrez, res) {
     tryCatch({
         human_genome <- BSgenome.Hsapiens.UCSC.hg38
         txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
@@ -23,25 +22,14 @@ function(entrez, complete = TRUE, res) {
         }
         #coordenadas: objeto GRanges
         #secuencia: objeto DNAStringSet de biostrings
-        if(complete){      
-            coord_gene <- genes(txdb)[entrez]
-            if (length(coord_gene) == 0) {
-                res$status <- 404
-                stop(paste("No se encontro el entrez: ", entrez), call. = FALSE)
-            }
-            sequence <- getSeq(human_genome, coord_gene) #devuelve la codificante
-            DNA_str <- unlist(sequence) ##STATS
-
-        } else {
-            coord_exones <- exonsBy(txdb, by = "gene")[[entrez]] 
-            if (is.null(coord_exones)) {
-                res$status <- 404
-                stop(paste("No se encontro el entrez: ", entrez), call. = FALSE)
-            }
-            #exones
-            seq_exones <- getSeq(human_genome, coord_exones)
-            sequence <- do.call(xscat, as.list(seq_exones))
+        coord_gene <- genes(txdb)[entrez]
+        if (length(coord_gene) == 0) {
+            res$status <- 404
+            stop(paste("No se encontro el entrez: ", entrez), call. = FALSE)
         }
+        sequence <- getSeq(human_genome, coord_gene) #devuelve la codificante
+        DNA_str <- unlist(sequence) ##STATS
+
         counter_base <- alphabetFrequency(DNA_str, baseOnly = TRUE)
         pattern_CpG <- DNAString("CG")
         counter_CpG <- countPattern(pattern_CpG, DNA_str)
