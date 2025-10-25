@@ -12,7 +12,7 @@ api$mount("/detailfull", Plumber$new("endpoints/detailfull.R")) #ok
 api$mount("/entrez", Plumber$new("endpoints/entrez.R"))
 api$mount("/isentrez", Plumber$new("endpoints/isentrez.R"))
 api$mount("/percent", Plumber$new("endpoints/percent.R"))
-api$mount("/sequence_range", Plumber$new("endpoints/seq_by_range.R"))
+api$mount("/sequence_range", Plumber$new("endpoints/sequence_range.R"))
 api$mount("/sequence", Plumber$new("endpoints/sequence.R"))
 api$mount("/sequence_and_stats", Plumber$new("endpoints/sequence_and_stats.R"))
 api$mount("/stats", Plumber$new("endpoints/stats.R"))
