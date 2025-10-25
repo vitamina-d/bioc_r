@@ -11,7 +11,7 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 function(entrez) {
 
     txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
-    detail <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENTREZID", "GENETYPE", "MAP", "SYMBOL"), keytype = "ENTREZID")
+    detail <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENTREZID", "GENETYPE", "GENENAME", "MAP", "SYMBOL"), keytype = "ENTREZID")
 
     #manejo listas: [], ["item"], ["item1", "item2"]
     aliases <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ALIAS"), keytype = "ENTREZID")
@@ -93,6 +93,7 @@ function(entrez) {
             entrez = entrez,
             symbol = unique(detail$SYMBOL),
             genetype = unique(detail$GENETYPE),
+            genename = unique(detail$GENENAME),
             citogenetic = unique(detail$MAP), #principal
             location = locations, #list
             alias = aliases, #list
