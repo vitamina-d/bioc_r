@@ -8,34 +8,36 @@ library(org.Hs.eg.db)
 #* @serializer unboxedJSON 
 function(entrez) {
 
-    details <- tryCatch({
+    detail <- tryCatch({
         AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("GENETYPE", "GENENAME", "SYMBOL", "ALIAS"), keytype = "ENTREZID")
-    }, error = function(e) NULL)
+    }, error = function(e) {
+        stop(paste("No se obtuvo detalle: ", e$message), call. = FALSE)
+    })
 
-    if (is.null(detail)) {
-        response <- list(
-            code = 500,
-            message = "try catch",
-            data = NULL
-        )
-    } else if (length(detail) == 0) {
-        response <- list(
-            code = 404,
-            message = paste("no se encontraron valores para el entrez ", alias),
-            data = NULL
-        )
-    } else {
-      response <- list(
+    if (is.null(detail) || length(detail) == 0 || nrow(detail) == 0) {
+        # exception
+        stop(paste("No se obtuvo detalle: ", e$message), call. = FALSE)
+    }
+
+    aliases <- unique(detail$ALIAS)
+    print(aliases)
+    if (length(aliases) == 0) {
+        aliases <- list()
+    } else if (length(aliases) == 1) {
+        aliases <- list(aliases)
+    } 
+
+    #select 1: ok
+    #select 1:1 da error
+    response <- list(
         code = 200,
-        message = "Ok"
+        message = "Ok",
         data = list(
             entrez = entrez,
-            symbol = unique(details$SYMBOL),
-            genename = unique(details$GENENAME),
-            genetype = unique(details$GENETYPE),
-            alias = unique(details$ALIAS)
+            symbol = unique(detail$SYMBOL),
+            genename = unique(detail$GENENAME),
+            genetype = unique(detail$GENETYPE),
+            alias = aliases
         )
-      )
-    }
-    return(response)
+    )
 }

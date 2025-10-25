@@ -31,3 +31,22 @@ TABLE
       ]
   }
 }
+
+FROM r-base:latest
+
+RUN apt-get update && apt-get install -y 
+    libxml2-dev 
+    libcurl4-openssl-dev 
+    libssl-dev 
+    && rm -rf /var/lib/apt/lists/*
+
+RUN R -e "install.packages('BiocManager', repos='https://cloud.r-project.org')" 
+ && R -e "BiocManager::install(c('org.Hs.eg.db', 'AnnotationDbi'))" 
+ && R -e "install.packages('plumber', repos='https://cloud.r-project.org')"
+
+WORKDIR /rservice
+COPY . .
+
+EXPOSE 8000
+
+CMD ["R", "-e", "library(plumber); pr('plumber.R') %>% pr_run(host='0.0.0.0', port=8000)"]

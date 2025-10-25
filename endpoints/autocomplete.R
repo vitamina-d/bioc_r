@@ -8,26 +8,26 @@ library(AnnotationDbi)
 #* @serializer unboxedJSON 
 function(input) {
 
-    alias <- unique(keys(org.Hs.eg.db, keytype = "ALIAS"))
+    tryCatch({
+        alias <- unique(keys(org.Hs.eg.db, keytype = "ALIAS"))
+        matches <- grep(input, alias, ignore.case = TRUE, value = TRUE)
 
-    matches <- grep(input, alias, ignore.case = TRUE, value = TRUE)
+        if (length(matches) == 0) {
+            matches <- list()
+        } else if (length(matches) == 1) {
+            matches <- list(matches)
+        } 
+        #print(matches)
+        #print(typeof(matches))
 
-    if (length(matches) == 0)  {
-        matches <- NULL
-    } 
-    
-    if (length(matches) == 0) {
-        result <- list(
-            code = 404,
-            message = paste("no se encontro"),
-            data = list()
-        )
-    } else {
-        result <- list(
+        list(
             code = 200,
             message = "Ok",
             data = head(matches, 20)
         )
-    }
-    return(result)
+
+    }, error = function(e) {
+        # exception
+        stop(paste("No se obtuvo detalle: ", e$message), call. = FALSE)
+    })
 }
