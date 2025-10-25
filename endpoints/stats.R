@@ -6,7 +6,7 @@ library(org.Hs.eg.db)
 library(GenomicFeatures)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* sequence devuelve la secuencia completa o de exones a partir de su entrez
+#* stats devuelve la secuencia completa o de exones a partir de su entrez
 #* @param entrez EntrezID
 #* @param complete:boolean Secuencia completa (TRUE) o solo exones (FALSE)
 #* @get /
@@ -30,6 +30,8 @@ function(entrez, complete = TRUE, res) {
                 stop(paste("No se encontro el entrez: ", entrez), call. = FALSE)
             }
             sequence <- getSeq(human_genome, coord_gene) #devuelve la codificante
+            DNA_str <- unlist(sequence) ##STATS
+
         } else {
             coord_exones <- exonsBy(txdb, by = "gene")[[entrez]] 
             if (is.null(coord_exones)) {
@@ -40,14 +42,24 @@ function(entrez, complete = TRUE, res) {
             seq_exones <- getSeq(human_genome, coord_exones)
             sequence <- do.call(xscat, as.list(seq_exones))
         }
+        counter_base <- alphabetFrequency(DNA_str, baseOnly = TRUE)
+        pattern_CpG <- DNAString("CG")
+        counter_CpG <- countPattern(pattern_CpG, DNA_str)
+        match_CpG <- matchPattern(pattern_CpG, DNA_str)
+        cpg_info <- as.list(match_CpG@ranges@start)
 
         list(
             code = 200,
             message = "Ok.",
             data = list(
                 complete = as.logical(complete),
-                sequence_length = nchar(sequence),
-                sequence = as.character(sequence)
+                sequence = as.character(DNA_str),
+                length = nchar(DNA_str),
+                nucleotides = as.list(counter_base),
+                cpg_islands = list(
+                    count = counter_CpG,
+                    start = cpg_info
+                )
             )
         )
     }, error = function(e) {

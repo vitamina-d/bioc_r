@@ -9,19 +9,27 @@ library(Biostrings)
 #* @post /
 #* @tag sequence
 #* @serializer unboxedJSON 
-function(pattern, subject, type, gapOpening, gapExtension) { ## allocate 733.5 Mb of memory (i.e. length(pattern) * length(subject) * 3 bytes)
+function(pattern, subject, type, gapOpening, gapExtension, res) { ## allocate 733.5 Mb of memory (i.e. length(pattern) * length(subject) * 3 bytes)
     gapOpening <- as.numeric(gapOpening)
     gapExtension <- as.numeric(gapExtension)
     # Validación de entrada
     if (is.null(pattern) || pattern == "") {
+        res$status <- 400
         stop("Ingrese pattern", call. = FALSE) # HTTP 400
     }
     if (is.null(subject) || subject == "") {
+        res$status <- 400
         stop("Ingrese subject", call. = FALSE) # HTTP 400
     }
     if (!(type %in% c("global","local","overlap"))) {
+        res$status <- 400
         stop("Ingrese type valido: 'global' | 'local' | 'overlap'", call. = FALSE) # HTTP 400
     }
+    if (is.na(gapOpening) || is.na(gapExtension) || gapOpening < 0 || gapExtension < 0) {
+        res$status <- 400
+        stop("gapOpening y gapExtension deben ser numeros positivos", call. = FALSE)
+    }
+
     tryCatch({
         seqA <- DNAString(pattern)
         seqB <- DNAString(subject)
@@ -39,6 +47,7 @@ function(pattern, subject, type, gapOpening, gapExtension) { ## allocate 733.5 M
             )
     }, error = function(e){
         # exception
-        stop(paste("Internal server error:", e$message), call. = FALSE)
+        res$status <- 500
+        stop(paste("Error de servicio R: ", e$message), call. = FALSE)
     })
 }

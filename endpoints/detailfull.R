@@ -8,15 +8,26 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 #* @get /
 #* @tag detail
 #* @serializer unboxedJSON 
-function(entrez) {
+function(entrez, res) {
 
     txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
-    detail <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENTREZID", "GENETYPE", "GENENAME", "MAP", "SYMBOL"), keytype = "ENTREZID")
+
+    detail <- tryCatch({
+        AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENTREZID", "GENETYPE", "GENENAME", "MAP", "SYMBOL"), keytype = "ENTREZID")
+    }, error = function(e) {
+        res$status <- 500
+        stop(paste("Error de servicio R: ", e$message), call. = FALSE)
+    })
+
+    if (is.null(detail) || length(detail) == 0 || nrow(detail) == 0) {
+        res$status <- 404
+        stop(paste("No se encontro el entrez: ", entrez), call. = FALSE)
+    }
 
     #manejo listas: [], ["item"], ["item1", "item2"]
     aliases <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ALIAS"), keytype = "ENTREZID")
-    print("aliases")
-    print(aliases$ALIAS)
+    #print("aliases")
+    #print(aliases$ALIAS)
     aliases <- unique(aliases$ALIAS)
     aliases <- aliases[!is.na(aliases)]
     if (length(aliases) == 0) {
@@ -26,8 +37,8 @@ function(entrez) {
     }
 
     prot_ensembl <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENSEMBLPROT"), keytype = "ENTREZID")
-    print("prot_ensembl")
-    print(prot_ensembl$ENSEMBLPROT)
+    #print("prot_ensembl")
+    #print(prot_ensembl$ENSEMBLPROT)
     prot_ensembl <- unique(prot_ensembl$ENSEMBLPROT)
     prot_ensembl <- prot_ensembl[!is.na(prot_ensembl)]
     if (length(prot_ensembl) == 0) {
@@ -37,8 +48,8 @@ function(entrez) {
     }
 
     gene_ensembl <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("ENSEMBL"), keytype = "ENTREZID")
-    print("gene_ensembl")
-    print(gene_ensembl$ENSEMBL)
+    #print("gene_ensembl")
+    #print(gene_ensembl$ENSEMBL)
     gene_ensembl <- unique(gene_ensembl$ENSEMBL)
     gene_ensembl <- gene_ensembl[!is.na(gene_ensembl)]
     if (length(gene_ensembl) == 0) {
@@ -48,8 +59,8 @@ function(entrez) {
     }
     
     uniprot <- AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("UNIPROT"), keytype = "ENTREZID")
-    print("uniprot")
-    print(uniprot$UNIPROT)
+    #print("uniprot")
+    #print(uniprot$UNIPROT)
     uniprot <- unique(uniprot$UNIPROT)
     uniprot <- uniprot[!is.na(uniprot)]
     if (length(uniprot) == 0) {
@@ -61,15 +72,18 @@ function(entrez) {
     # locations
     grangeslist <- tryCatch({
         genes(txdb, single.strand.genes.only = FALSE)[entrez]
-    }, error = function(e) NULL)
-    print("grangeslist")
-    print(grangeslist)
+    }, error = function(e) {
+        res$status <- 500
+        stop(paste("Error de servicio R (location): ", e$message), call. = FALSE)
+    })
+    #print("grangeslist")
+    #print(grangeslist)
 
     locations <- list()
     if (!is.null(grangeslist) && length(grangeslist) > 0) {
         granges <- grangeslist[[1]]
-        print("granges")
-        print(granges)
+        #print("granges")
+        #print(granges)
         for (i in seq_along(granges)) {
             locations[[i]] <- list(
                 strand = as.character(strand(granges[i])),
@@ -83,7 +97,8 @@ function(entrez) {
 
     if (is.null(detail) || length(detail) == 0) {
         # exception
-        stop(paste("No se obtuvo detalle: ", e$message), call. = FALSE)
+        res$status <- 404
+        stop(paste("No se obtuvo detalle: "), call. = FALSE)
     }
 
     response <- list(

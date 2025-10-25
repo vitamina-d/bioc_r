@@ -12,7 +12,7 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 #* @get /
 #* @tag sequence
 #* @serializer unboxedJSON 
-function(entrez, complete = TRUE) {
+function(entrez, complete = TRUE, res) {
 
     human_genome <- BSgenome.Hsapiens.UCSC.hg38
     txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene

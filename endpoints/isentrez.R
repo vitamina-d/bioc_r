@@ -6,28 +6,15 @@ library(org.Hs.eg.db)
 #* @get /
 #* @tag entrez
 #* @serializer unboxedJSON 
-function(entrez) {
-    
-    if (is.null(entrez) || entrez == "" ) {
-        result <- list(
-            code = 400,
-            message = "Ingrese un valor.",
-            data = NULL
-        )
-        return(result)
-    } 
+function(entrez, res) {
+    is_entrez <- FALSE
 
     ids <- tryCatch({
         keys(org.Hs.eg.db, keytype = "ENTREZID")    
-    }, error = function(e) NULL)
-
-    if (is.null(ids)) {
-        result <- list(
-            code = 500,
-            message = "Error del servidor.",
-            data = NULL
-        )
-    }
+    }, error = function(e) {
+        res$status <- 500
+        stop(paste("Fallo la consulta a org.Hs.eg.db: ", e$message), call. = FALSE)
+    })
 
     if (entrez %in% ids) {
         is_entrez = TRUE

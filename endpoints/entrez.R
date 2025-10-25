@@ -1,48 +1,36 @@
-#* entrez devuelve el entrez si lo encuentra
+#* entrez devuelve el entrez de un ALIAS o SYMBOL (enviar mayus)
 #* @param value 
 #* @get /
 #* @tag entrez
 #* @serializer unboxedJSON 
-function(value) {
+function(value, res) {
 
     if (is.null(value) || value == "" ) {
-        result <- list(
-            code = 400,
-            data = list (
-                message = "Ingrese un valor.",
-                entrez = NULL
-            )
-        )
-        return(result)
+        res$status <- 400
+        stop(paste("Ingrese value: "), call. = FALSE)
     } 
 
     entrez <- tryCatch({
+        value <- toupper(value)
         AnnotationDbi::select(org.Hs.eg.db, keys = value, columns = "ENTREZID", keytype = "ALIAS")$ENTREZID
     }, error = function(e) NULL)
 
-    if (is.null(entrez)) {
+    if (is.null(entrez) || length(entrez) == 0) {
         entrez <- tryCatch({
             AnnotationDbi::select(org.Hs.eg.db, keys = value, columns = "ENTREZID", keytype = "SYMBOL")$ENTREZID
         }, error = function(e) NULL)
-    } 
-    
-    end_time <- Sys.time()
-    time <- as.numeric(difftime(end_time, start_time, units = "secs"))
-    
-    if (is.null(entrez) || length(entrez) == 0) {
-        result <- list(
-            code = 404,
-            message = paste("no se encontro entrez para ", value),
-            data = NULL
-        )
-    } else {
-        result <- list(
-            code = 200,
-            message = "Ok",
-            data = list( 
-                entrez = unique(entrez)
-            )
-        )
     }
-    return(result)
+
+    if (is.null(entrez) || length(entrez) == 0) {
+        res$status <- 404
+        stop(paste("No se encontró el ENTREZID para el value: ", value), call. = FALSE)
+    }
+
+    list(
+        code = 200,
+        message = "Ok",
+        data = list( 
+            entrez = unique(entrez)
+        )
+    )
 }

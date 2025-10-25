@@ -6,17 +6,18 @@ library(org.Hs.eg.db)
 #* @get /
 #* @tag detail
 #* @serializer unboxedJSON 
-function(entrez) {
+function(entrez, res) {
 
     detail <- tryCatch({
         AnnotationDbi::select(org.Hs.eg.db, keys = entrez, columns = c("GENETYPE", "GENENAME", "SYMBOL", "ALIAS"), keytype = "ENTREZID")
     }, error = function(e) {
-        stop(paste("No se obtuvo detalle: ", e$message), call. = FALSE)
+        res$status <- 500
+        stop(paste("Error de servicio R: ", e$message), call. = FALSE)
     })
 
     if (is.null(detail) || length(detail) == 0 || nrow(detail) == 0) {
-        # exception
-        stop(paste("No se obtuvo detalle: ", e$message), call. = FALSE)
+        res$status <- 404
+        stop(paste("No se encontro el entrez: ", e$message), call. = FALSE)
     }
 
     aliases <- unique(detail$ALIAS)
