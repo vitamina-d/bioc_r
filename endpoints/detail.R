@@ -28,8 +28,6 @@ function(entrez, res) {
         aliases <- list(aliases)
     } 
 
-    #select 1: ok
-    #select 1:1 da error
     response <- list(
         code = 200,
         message = "Ok",

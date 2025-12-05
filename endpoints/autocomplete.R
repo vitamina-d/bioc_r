@@ -19,8 +19,6 @@ function(input, res) {
         } else if (length(matches) == 1) {
             matches <- list(matches)
         } 
-        #print(matches)
-        #print(typeof(matches))
 
         list(
             code = 200,
@@ -29,7 +27,6 @@ function(input, res) {
         )
 
     }, error = function(e) {
-        # exception
         res$status <- 500
         stop(paste("Error de servicio R: ", e$message), call. = FALSE)
     })

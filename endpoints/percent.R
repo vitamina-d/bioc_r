@@ -15,9 +15,7 @@ function(seq, res) {
   
     DNA_str <- tryCatch({
         DNAString(seq)
-        #as.character(DNA_str) seq
     }, error = function(e){
-        # exception
         res$status <- 400
         stop(paste("No se puede convertir a DNAString:", e$message), call. = FALSE)
     })

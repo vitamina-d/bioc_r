@@ -21,8 +21,6 @@ function(entrez, complete = TRUE, res) {
             res$status <- 400
             stop("Ingrese entrez.", call. = FALSE)
         }
-        #coordenadas: objeto GRanges
-        #secuencia: objeto DNAStringSet de biostrings
         if(complete){      
             
             coord_gene <- tryCatch({
@@ -57,7 +55,6 @@ function(entrez, complete = TRUE, res) {
             coord_exones <- exonsBy(txdb, by = "gene")[[entrez]] 
             seq_exones <- getSeq(human_genome, coord_exones)
 
-            # cada seq
             result <- lapply(seq_along(seq_exones), function(i) {
                 list(
                     index = i,

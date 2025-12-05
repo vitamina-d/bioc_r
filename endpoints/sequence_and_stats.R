@@ -16,8 +16,6 @@ function(entrez, res) {
     human_genome <- BSgenome.Hsapiens.UCSC.hg38
     txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
 
-    #coordenadas: objeto GRanges
-    #secuencia: objeto DNAStringSet de biostrings
     coord_gene <- tryCatch({
         genes(txdb)[entrez]
     }, error = function(e) {

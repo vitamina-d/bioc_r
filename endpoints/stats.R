@@ -20,8 +20,6 @@ function(entrez, res) {
             res$status <- 400
             stop("Ingrese entrez.", call. = FALSE)
         }
-        #coordenadas: objeto GRanges
-        #secuencia: objeto DNAStringSet de biostrings
         coord_gene <- genes(txdb)[entrez]
         if (length(coord_gene) == 0) {
             res$status <- 404

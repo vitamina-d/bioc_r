@@ -9,21 +9,21 @@ library(Biostrings)
 #* @post /
 #* @tag sequence
 #* @serializer unboxedJSON 
-function(pattern, subject, type, gapOpening, gapExtension, res) { ## allocate 733.5 Mb of memory (i.e. length(pattern) * length(subject) * 3 bytes)
+function(pattern, subject, type, gapOpening, gapExtension, res) { 
     gapOpening <- as.numeric(gapOpening)
     gapExtension <- as.numeric(gapExtension)
-    # Validación de entrada
+
     if (is.null(pattern) || pattern == "") {
         res$status <- 400
-        stop("Ingrese pattern", call. = FALSE) # HTTP 400
+        stop("Ingrese pattern", call. = FALSE) 
     }
     if (is.null(subject) || subject == "") {
         res$status <- 400
-        stop("Ingrese subject", call. = FALSE) # HTTP 400
+        stop("Ingrese subject", call. = FALSE) 
     }
     if (!(type %in% c("global","local","overlap"))) {
         res$status <- 400
-        stop("Ingrese type valido: 'global' | 'local' | 'overlap'", call. = FALSE) # HTTP 400
+        stop("Ingrese type valido: 'global' | 'local' | 'overlap'", call. = FALSE) 
     }
     if (is.na(gapOpening) || is.na(gapExtension) || gapOpening < 0 || gapExtension < 0) {
         res$status <- 400
@@ -33,7 +33,6 @@ function(pattern, subject, type, gapOpening, gapExtension, res) { ## allocate 73
     tryCatch({
         seqA <- DNAString(pattern)
         seqB <- DNAString(subject)
-        #matrix <- nucleotideSubstitutionMatrix(match = match, mismatch = mismatch, baseOnly=TRUE)
         align <- pairwiseAlignment(	seqA, seqB, type = type, substitutionMatrix = NULL, gapOpening = gapOpening, gapExtension = gapExtension)
 
         list(
