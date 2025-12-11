@@ -3,7 +3,7 @@ library(org.Hs.eg.db)
 library(GenomicFeatures)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 
-#* detail muestra info de un gen, dado su ENTREZ 
+#* detailfull muestra info de un gen, dado su ENTREZ 
 #* @param entrez id del gen
 #* @get /
 #* @tag detail

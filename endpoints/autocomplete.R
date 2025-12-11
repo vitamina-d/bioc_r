@@ -1,7 +1,7 @@
 library(org.Hs.eg.db)
 library(AnnotationDbi)
 
-#* entrez devuelve el entrez si lo encuentra
+#* autocomplete devuelve la lista de alias
 #* @param input 
 #* @get /
 #* @tag detail
